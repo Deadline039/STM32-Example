@@ -1,0 +1,1047 @@
+{
+  "name": "f4-lvgl-demo",
+  "type": "ARM",
+  "dependenceList": [],
+  "srcDirs": [],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [],
+    "folders": [
+      {
+        "name": "Bsp",
+        "files": [
+          {
+            "path": "Drivers/Bsp/core/bsp_core.c"
+          },
+          {
+            "path": "Drivers/Bsp/core/core_delay.c"
+          },
+          {
+            "path": "Drivers/Bsp/core/retarget_io.c"
+          },
+          {
+            "path": "Drivers/Bsp/key/key.c"
+          },
+          {
+            "path": "Drivers/Bsp/led/led.c"
+          },
+          {
+            "path": "Drivers/Bsp/bsp.c"
+          },
+          {
+            "path": "Drivers/Bsp/lcd/lcd.c"
+          },
+          {
+            "path": "Drivers/Bsp/sdram/sdram.c"
+          },
+          {
+            "path": "Drivers/Bsp/ltdc/ltdc.c"
+          },
+          {
+            "path": "Drivers/Bsp/at24cxx/at24cxx.c"
+          },
+          {
+            "path": "Drivers/Bsp/touch/touch.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "Application",
+        "files": [
+          {
+            "path": "User/Application/Src/main.c"
+          },
+          {
+            "path": "User/Application/Src/stm32f4xx_it.c"
+          },
+          {
+            "path": "User/Application/Src/rtos_tasks.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "Drivers",
+        "files": [],
+        "folders": [
+          {
+            "name": "HAL_Driver",
+            "files": [
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_cortex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dma.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_flash.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_gpio.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_rcc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_uart.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_i2c.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_adc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_can.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_crc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_cryp.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_cryp_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dac.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_eth.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_exti.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_iwdg.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_pwr.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_rtc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_tim.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_usart.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_wwdg.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_ll_fmc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_sdram.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_sram.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_ltdc.c"
+              }
+            ],
+            "folders": []
+          },
+          {
+            "name": "CMSIS",
+            "files": [
+              {
+                "path": "Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c"
+              }
+            ],
+            "folders": [
+              {
+                "name": "Startup",
+                "files": [
+                  {
+                    "path": "Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/arm/startup_stm32f429xx.s"
+                  }
+                ],
+                "folders": []
+              }
+            ]
+          },
+          {
+            "name": "CSP",
+            "files": [
+              {
+                "path": "Drivers/CSP/UART_STM32F4xx.c"
+              },
+              {
+                "path": "Drivers/CSP/CAN_STM32F4xx.c"
+              },
+              {
+                "path": "Drivers/CSP/ETH_STM32F4xx.c"
+              },
+              {
+                "path": "Drivers/CSP/I2C_STM32F4xx.c"
+              },
+              {
+                "path": "Drivers/CSP/RTC_STM32F4xx.c"
+              },
+              {
+                "path": "Drivers/CSP/SPI_STM32F4xx.c"
+              }
+            ],
+            "folders": []
+          }
+        ]
+      },
+      {
+        "name": "Middlewares",
+        "files": [],
+        "folders": [
+          {
+            "name": "FreeRTOS",
+            "files": [],
+            "folders": [
+              {
+                "name": "Core",
+                "files": [
+                  {
+                    "path": "Middlewares/FreeRTOS/croutine.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/event_groups.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/list.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/queue.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/stream_buffer.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/tasks.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/timers.c"
+                  }
+                ],
+                "folders": []
+              },
+              {
+                "name": "Portable",
+                "files": [
+                  {
+                    "path": "Middlewares/FreeRTOS/portable/MemMang/heap_4.c"
+                  },
+                  {
+                    "path": "Middlewares/FreeRTOS/portable/GCC/ARM_CM4F/port.c"
+                  }
+                ],
+                "folders": []
+              }
+            ]
+          },
+          {
+            "name": "LVGL",
+            "files": [],
+            "folders": [
+              {
+                "name": "src",
+                "files": [],
+                "folders": [
+                  {
+                    "name": "core",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_disp.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_event.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_group.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_indev.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_indev_scroll.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_class.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_draw.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_pos.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_scroll.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_style.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_style_gen.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_obj_tree.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_refr.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/core/lv_theme.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "draw",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_arc.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_blend.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_dither.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_gradient.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_img.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_letter.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_line.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_polygon.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_rect.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_arc.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_img.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_label.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_line.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_mask.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_rect.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_triangle.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_img_buf.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_img_cache.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_img_decoder.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_layer.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/lv_draw_transform.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw.h"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_blend.h"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_dither.h"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_gradient.h"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_layer.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "extra",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/layouts/flex/lv_flex.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/layouts/grid/lv_grid.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/others/gridnav/lv_gridnav.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/others/monkey/lv_monkey.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/others/snapshot/lv_snapshot.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/themes/basic/lv_theme_basic.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/themes/default/lv_theme_default.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/themes/mono/lv_theme_mono.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/animimg/lv_animimg.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/calendar/lv_calendar.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/calendar/lv_calendar_header_arrow.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/calendar/lv_calendar_header_dropdown.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/chart/lv_chart.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/colorwheel/lv_colorwheel.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/imgbtn/lv_imgbtn.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/keyboard/lv_keyboard.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/led/lv_led.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/list/lv_list.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/menu/lv_menu.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/meter/lv_meter.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/msgbox/lv_msgbox.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/span/lv_span.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/spinbox/lv_spinbox.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/spinner/lv_spinner.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/tabview/lv_tabview.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/tileview/lv_tileview.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/widgets/win/lv_win.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/lv_extra.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "font",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_dejavu_16_persian_hebrew.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_fmt_txt.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_loader.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_8.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_10.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_12.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_12_subpx.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_14.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_16.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_18.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_20.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_22.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_24.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_26.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_28.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_28_compressed.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_30.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_32.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_34.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_36.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_38.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_40.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_42.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_44.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_46.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_montserrat_48.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_simsun_16_cjk.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_unscii_8.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/font/lv_font_unscii_16.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "gpu",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_arc.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_bg.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_composite.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_img.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_label.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_line.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_mask.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_polygon.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_rect.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_stack_blur.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_texture_cache.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/sdl/lv_draw_sdl_utils.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/draw/stm32_dma2d/lv_gpu_stm32_dma2d.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "hal",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/hal/lv_hal_disp.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/hal/lv_hal_indev.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/hal/lv_hal_tick.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "misc",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_anim.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_anim_timeline.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_area.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_async.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_bidi.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_color.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_fs.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_gc.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_ll.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_log.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_lru.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_math.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_mem.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_printf.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_style.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_style_gen.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_templ.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_timer.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_tlsf.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_txt.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_txt_ap.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_utils.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "widgets",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_arc.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_bar.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_btn.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_btnmatrix.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_canvas.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_checkbox.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_dropdown.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_img.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_label.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_line.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_objx_templ.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_roller.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_slider.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_switch.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_table.c"
+                      },
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_textarea.c"
+                      }
+                    ],
+                    "folders": []
+                  }
+                ]
+              },
+              {
+                "name": "porting",
+                "files": [
+                  {
+                    "path": "Middlewares/LVGL/GUI/porting/lv_port_disp.c"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/GUI/porting/lv_port_indev.c"
+                  }
+                ],
+                "folders": []
+              },
+              {
+                "name": "APP",
+                "files": [
+                  {
+                    "path": "Middlewares/LVGL/APP/images.c"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/APP/screens.c"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/APP/styles.c"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/APP/ui.c"
+                  }
+                ],
+                "folders": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Docs",
+        "files": [],
+        "folders": []
+      },
+      {
+        "name": "Utils",
+        "files": [
+          {
+            "path": "User/Utils/ring_fifo/ring_fifo.c"
+          }
+        ],
+        "folders": []
+      }
+    ]
+  },
+  "outDir": "build",
+  "deviceName": "STM32F429IGTx",
+  "packDir": ".pack/Keil/STM32F4xx_DFP.2.14.0",
+  "miscInfo": {
+    "uid": "07248149c202390e42267d22a2968c81"
+  },
+  "targets": {
+    "Debug": {
+      "excludeList": [
+        "<virtual_root>/Drivers/CSP/CAN_STM32F4xx.c",
+        "<virtual_root>/Drivers/CSP/ETH_STM32F4xx.c",
+        "<virtual_root>/Drivers/CSP/RTC_STM32F4xx.c",
+        "<virtual_root>/Drivers/CSP/SPI_STM32F4xx.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc_ex.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_can.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_crc.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_cryp_ex.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_cryp.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_dac_ex.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_dac.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_eth.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_exti.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_i2s_ex.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_iwdg.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_rtc_ex.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_rtc.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim_ex.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_usart.c",
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_wwdg.c"
+      ],
+      "toolchain": "AC6",
+      "compileConfig": {
+        "cpuType": "Cortex-M4",
+        "floatingPointHardware": "single",
+        "useCustomScatterFile": false,
+        "scatterFilePath": "<YOUR_SCATTER_FILE>.sct",
+        "storageLayout": {
+          "RAM": [
+            {
+              "tag": "IRAM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x20000000",
+                "size": "0x00030000"
+              },
+              "isChecked": true,
+              "noInit": false
+            },
+            {
+              "tag": "IRAM",
+              "id": 2,
+              "mem": {
+                "startAddr": "0x10000000",
+                "size": "0x00010000"
+              },
+              "isChecked": true,
+              "noInit": false
+            }
+          ],
+          "ROM": [
+            {
+              "tag": "IROM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x08000000",
+                "size": "0x00100000"
+              },
+              "isChecked": true,
+              "isStartup": true
+            }
+          ]
+        },
+        "options": "null"
+      },
+      "uploader": "JLink",
+      "uploadConfig": {
+        "bin": "",
+        "baseAddr": "",
+        "cpuInfo": {
+          "vendor": "ST",
+          "cpuName": "STM32F429IG"
+        },
+        "proType": 1,
+        "speed": 15000,
+        "otherCmds": ""
+      },
+      "uploadConfigMap": {},
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          "Drivers/CMSIS/Core/Include",
+          "Drivers/STM32_HAL_Driver/Inc",
+          "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+          "Drivers/CSP/Config",
+          "Drivers/Bsp",
+          "User/Application/Inc",
+          "User/Utils",
+          "Middlewares/FreeRTOS/include",
+          "Middlewares/FreeRTOS/portable/GCC/ARM_CM4F",
+          "Middlewares/LVGL/GUI",
+          "Middlewares/LVGL/GUI/lvgl",
+          "Middlewares/LVGL/GUI/lvgl/src",
+          "Middlewares/LVGL/GUI/porting",
+          "Middlewares/LVGL/APP"
+        ],
+        "libList": [],
+        "defineList": [
+          "USE_HAL_DRIVER",
+          "DEBUG",
+          "STM32F429xx"
+        ]
+      },
+      "builderOptions": {
+        "GCC": {
+          "version": 5,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "$float-abi-type": "softfp",
+            "output-debug-info": "enable",
+            "misc-control": "--specs=nosys.specs --specs=nano.specs"
+          },
+          "c/cpp-compiler": {
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "optimization": "level-debug",
+            "warnings": "all-warnings",
+            "one-elf-section-per-function": true,
+            "one-elf-section-per-data": true,
+            "C_FLAGS": "",
+            "CXX_FLAGS": ""
+          },
+          "asm-compiler": {
+            "ASM_FLAGS": ""
+          },
+          "linker": {
+            "output-format": "elf",
+            "remove-unused-input-sections": true,
+            "LD_FLAGS": "",
+            "LIB_FLAGS": "-lm"
+          }
+        },
+        "AC5": {
+          "version": 4,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "use-microLIB": false,
+            "output-debug-info": "enable"
+          },
+          "c/cpp-compiler": {
+            "optimization": "level-0",
+            "one-elf-section-per-function": true,
+            "c99-mode": true,
+            "C_FLAGS": "--diag_suppress=1 --diag_suppress=1295",
+            "CXX_FLAGS": "--diag_suppress=1 --diag_suppress=1295"
+          },
+          "asm-compiler": {},
+          "linker": {
+            "output-format": "elf"
+          }
+        },
+        "AC6": {
+          "version": 3,
+          "beforeBuildTasks": [],
+          "afterBuildTasks": [],
+          "global": {
+            "output-debug-info": "enable"
+          },
+          "c/cpp-compiler": {
+            "optimization": "level-0",
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "warnings": "all-warnings",
+            "CXX_FLAGS": "-Wno-padded -Wno-unsafe-buffer-usage -Wno-reserved-identifier -Wno-missing-noreturn -Wno-covered-switch-default -Wno-switch-enum -Wno-missing-prototypes -Wno-newline-eof -Wno-gnu-pointer-arith -Wno-declaration-after-statement -Wno-sign-conversion -Wno-implicit-int-conversion -Wno-double-promotion -Wno-missing-field-initializers -Wno-undef -Wno-self-assign -Wno-extra-semi-stmt -Wno-missing-variable-declarations -Wno-cast-align -Wno-implicit-float-conversion -Wno-missing-braces -Wno-cast-qual -Wno-format-nonliteral -Wno-gnu-binary-literal",
+            "one-elf-section-per-function": true,
+            "short-enums#wchar": true,
+            "link-time-optimization": true,
+            "C_FLAGS": "-Wno-padded -Wno-unsafe-buffer-usage -Wno-reserved-identifier -Wno-missing-noreturn -Wno-covered-switch-default -Wno-switch-enum -Wno-missing-prototypes -Wno-newline-eof -Wno-gnu-pointer-arith -Wno-declaration-after-statement -Wno-sign-conversion -Wno-implicit-int-conversion -Wno-double-promotion -Wno-missing-field-initializers -Wno-undef -Wno-self-assign -Wno-extra-semi-stmt -Wno-missing-variable-declarations -Wno-cast-align -Wno-implicit-float-conversion -Wno-missing-braces -Wno-cast-qual -Wno-format-nonliteral -Wno-gnu-binary-literal"
+          },
+          "asm-compiler": {
+            "$use": "asm-auto",
+            "misc-controls": "--diag_suppress=1950"
+          },
+          "linker": {
+            "output-format": "elf",
+            "misc-controls": "--diag_suppress=L6329"
+          }
+        }
+      }
+    }
+  },
+  "version": "3.5"
+}

@@ -51,8 +51,8 @@ typedef struct {
 /* 管理 LCD LTDC 参数 */
 extern ltdc_dev_t lcdltdc;
 
-extern LTDC_HandleTypeDef g_ltdc_handle;   /* LTDC 句柄 */
-extern DMA2D_HandleTypeDef g_dma2d_handle; /* DMA2D 句柄 */
+extern LTDC_HandleTypeDef ltdc_handle;   /* LTDC 句柄 */
+extern DMA2D_HandleTypeDef dma2d_handle; /* DMA2D 句柄 */
 
 /**
  * @}
@@ -85,7 +85,7 @@ extern DMA2D_HandleTypeDef g_dma2d_handle; /* DMA2D 句柄 */
 /* 定义默认背景层颜色 */
 #define LTDC_BACKLAYERCOLOR     0X00000000
 
-/* LTDC 帧缓冲区首地址, 这里定义在 SDRAM 里面. AC6需要修改 ltdc.c 中的代码 */
+/* LTDC 帧缓冲区首地址, 这里定义在 SDRAM 里面. AC6 需要修改 ltdc.c 中的代码 */
 #define LTDC_FRAME_BUF_ADDR     0XC0000000
 
 #define LTDC_PIXFORMAT_ARGB8888 0X00 /* ARGB8888 格式 */

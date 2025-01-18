@@ -63,7 +63,7 @@ void action_toggle_led1(lv_event_t *e) {
 }
 
 /**
- * @brief Task1: Blink.
+//  * @brief Task1: Blink.
  *
  * @param pvParameters Start parameters.
  */
@@ -86,10 +86,8 @@ void task1(void *pvParameters) {
  */
 void task2(void *pvParameters) {
     UNUSED(pvParameters);
-    while (1) {
-        ui_tick();
-        vTaskDelay(5);
-    }
+    while (1)
+        ;
 }
 
 /**

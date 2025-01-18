@@ -14,8 +14,8 @@
 
 #include "../lcd/lcd.h"
 
-LTDC_HandleTypeDef g_ltdc_handle;   /* LTDC 句柄 */
-DMA2D_HandleTypeDef g_dma2d_handle; /* DMA2D 句柄 */
+LTDC_HandleTypeDef ltdc_handle;   /* LTDC 句柄 */
+DMA2D_HandleTypeDef dma2d_handle; /* DMA2D 句柄 */
 
 /* 定义最大屏分辨率时, LTDC 所需的帧缓存数组大小 */
 
@@ -60,9 +60,9 @@ ltdc_dev_t lcdltdc;
  */
 void ltdc_switch(uint8_t sw) {
     if (sw) {
-        __HAL_LTDC_ENABLE(&g_ltdc_handle);
+        __HAL_LTDC_ENABLE(&ltdc_handle);
     } else {
-        __HAL_LTDC_DISABLE(&g_ltdc_handle);
+        __HAL_LTDC_DISABLE(&ltdc_handle);
     }
 }
 
@@ -78,12 +78,12 @@ void ltdc_switch(uint8_t sw) {
  */
 void ltdc_layer_switch(uint8_t layerx, uint8_t sw) {
     if (sw) {
-        __HAL_LTDC_LAYER_ENABLE(&g_ltdc_handle, layerx);
+        __HAL_LTDC_LAYER_ENABLE(&ltdc_handle, layerx);
     } else {
-        __HAL_LTDC_LAYER_DISABLE(&g_ltdc_handle, layerx);
+        __HAL_LTDC_LAYER_DISABLE(&ltdc_handle, layerx);
     }
 
-    __HAL_LTDC_RELOAD_CONFIG(&g_ltdc_handle);
+    __HAL_LTDC_RELOAD_CONFIG(&ltdc_handle);
 }
 
 /**
@@ -394,9 +394,9 @@ uint8_t ltdc_clk_set(uint32_t pllsain, uint32_t pllsair, uint32_t pllsaidivr) {
 void ltdc_layer_window_config(uint8_t layerx, uint16_t sx, uint16_t sy,
                               uint16_t width, uint16_t height) {
     /* 设置窗口的位置 */
-    HAL_LTDC_SetWindowPosition(&g_ltdc_handle, sx, sy, layerx);
+    HAL_LTDC_SetWindowPosition(&ltdc_handle, sx, sy, layerx);
     /* 设置窗口大小 */
-    HAL_LTDC_SetWindowSize(&g_ltdc_handle, width, height, layerx);
+    HAL_LTDC_SetWindowSize(&ltdc_handle, width, height, layerx);
 }
 
 /**
@@ -454,7 +454,7 @@ void ltdc_layer_parameter_config(uint8_t layerx, uint32_t bufaddr,
     /* 背景颜色蓝色部分 */
     playercfg.Backcolor.Blue = (uint8_t)bkcolor & 0X000000FF;
     /* 设置所选中的层 */
-    HAL_LTDC_ConfigLayer(&g_ltdc_handle, &playercfg, layerx);
+    HAL_LTDC_ConfigLayer(&ltdc_handle, &playercfg, layerx);
 }
 
 /**
@@ -616,54 +616,59 @@ void ltdc_init(void) {
 #else /* LTDC_PIXFORMAT */
 
     g_ltdc_framebuf[0] = (uint32_t *)&ltdc_lcd_framebuf;
-    // g_ltdc_framebuf [1] = (uint32_t*)&ltdc_lcd_framebuf1;
+    // g_ltdc_framebuf[1] = (uint32_t *)&ltdc_lcd_framebuf1;
     lcdltdc.pixsize = 2; /* 每个像素占 2 个字节 */
 
 #endif /* LTDC_PIXFORMAT */
 
     /* LTDC 配置 */
-    g_ltdc_handle.Instance = LTDC;
-    g_ltdc_handle.Init.HSPolarity = LTDC_HSPOLARITY_AL; /* 水平同步极性 */
-    g_ltdc_handle.Init.VSPolarity = LTDC_VSPOLARITY_AL; /* 垂直同步极性 */
-    g_ltdc_handle.Init.DEPolarity = LTDC_DEPOLARITY_AL; /* 数据使能极性 */
-    g_ltdc_handle.State = HAL_LTDC_STATE_RESET;
+    ltdc_handle.Instance = LTDC;
+    ltdc_handle.Init.HSPolarity = LTDC_HSPOLARITY_AL; /* 水平同步极性 */
+    ltdc_handle.Init.VSPolarity = LTDC_VSPOLARITY_AL; /* 垂直同步极性 */
+    ltdc_handle.Init.DEPolarity = LTDC_DEPOLARITY_AL; /* 数据使能极性 */
+    ltdc_handle.State = HAL_LTDC_STATE_RESET;
 
     if (ltdcid == 0X1018) {
-        g_ltdc_handle.Init.PCPolarity = LTDC_PCPOLARITY_IIPC; /* 像素时钟极性 */
+        ltdc_handle.Init.PCPolarity = LTDC_PCPOLARITY_IIPC; /* 像素时钟极性 */
     } else {
-        g_ltdc_handle.Init.PCPolarity = LTDC_PCPOLARITY_IPC; /* 像素时钟极性 */
+        ltdc_handle.Init.PCPolarity = LTDC_PCPOLARITY_IPC; /* 像素时钟极性 */
     }
 
-    g_ltdc_handle.Init.HorizontalSync = lcdltdc.hsw - 1; /* 水平同步宽度 */
-    g_ltdc_handle.Init.VerticalSync = lcdltdc.vsw - 1; /* 垂直同步宽度 */
-    g_ltdc_handle.Init.AccumulatedHBP =
+    ltdc_handle.Init.HorizontalSync = lcdltdc.hsw - 1; /* 水平同步宽度 */
+    ltdc_handle.Init.VerticalSync = lcdltdc.vsw - 1;   /* 垂直同步宽度 */
+    ltdc_handle.Init.AccumulatedHBP =
         lcdltdc.hsw + lcdltdc.hbp - 1; /* 水平同步后沿宽度 */
-    g_ltdc_handle.Init.AccumulatedVBP =
+    ltdc_handle.Init.AccumulatedVBP =
         lcdltdc.vsw + lcdltdc.vbp - 1; /* 垂直同步后沿高度 */
-    g_ltdc_handle.Init.AccumulatedActiveW =
+    ltdc_handle.Init.AccumulatedActiveW =
         lcdltdc.hsw + lcdltdc.hbp + lcdltdc.pwidth - 1; /* 有效宽度 */
-    g_ltdc_handle.Init.AccumulatedActiveH =
+    ltdc_handle.Init.AccumulatedActiveH =
         lcdltdc.vsw + lcdltdc.vbp + lcdltdc.pheight - 1; /* 有效高度 */
 
     /* 总宽度 */
-    g_ltdc_handle.Init.TotalWidth =
+    ltdc_handle.Init.TotalWidth =
         lcdltdc.hsw + lcdltdc.hbp + lcdltdc.pwidth + lcdltdc.hfp - 1;
     /* 总高度 */
-    g_ltdc_handle.Init.TotalHeigh =
+    ltdc_handle.Init.TotalHeigh =
         lcdltdc.vsw + lcdltdc.vbp + lcdltdc.pheight + lcdltdc.vfp - 1;
 
-    g_ltdc_handle.Init.Backcolor.Red = 0;   /* 屏幕背景层红色部分 */
-    g_ltdc_handle.Init.Backcolor.Green = 0; /* 屏幕背景层绿色部分 */
-    g_ltdc_handle.Init.Backcolor.Blue = 0;  /* 屏幕背景色蓝色部分 */
-    HAL_LTDC_Init(&g_ltdc_handle);
+    ltdc_handle.Init.Backcolor.Red = 0;   /* 屏幕背景层红色部分 */
+    ltdc_handle.Init.Backcolor.Green = 0; /* 屏幕背景层绿色部分 */
+    ltdc_handle.Init.Backcolor.Blue = 0;  /* 屏幕背景色蓝色部分 */
+    HAL_LTDC_Init(&ltdc_handle);
+
+    dma2d_handle.Instance = DMA2D;
+    dma2d_handle.Init.ColorMode = LTDC_PIXFORMAT;
+
+    HAL_DMA2D_Init(&dma2d_handle);
 
     /* 层配置 */
+
+    /* 第一层参数配置 */
     ltdc_layer_parameter_config(0, (uint32_t)g_ltdc_framebuf[0], LTDC_PIXFORMAT,
-                                255, 0, 6, 7, 0X000000); /* 第一层参数配置 */
-    ltdc_layer_window_config(
-        0, 0, 0, lcdltdc.pwidth,
-        lcdltdc
-            .pheight); /* 层窗口配置, 以 LCD 面板坐标系为基准, 不要随便修改!*/
+                                255, 0, 6, 7, 0X000000);
+    /* 层窗口配置, 以 LCD 面板坐标系为基准, 不要随便修改!*/
+    ltdc_layer_window_config(0, 0, 0, lcdltdc.pwidth, lcdltdc.pheight);
 
     // ltdc_layer_parameter_config(1, (uint32_t)g_ltdc_framebuf[1],
     //                             LTDC_PIXFORMAT,

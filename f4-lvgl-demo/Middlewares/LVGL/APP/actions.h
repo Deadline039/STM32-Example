@@ -7,7 +7,6 @@
 extern "C" {
 #endif
 
-extern void action_toggle_led(lv_event_t * e);
 extern void action_toggle_led1(lv_event_t * e);
 extern void action_toggle_led0(lv_event_t * e);
 

@@ -19,7 +19,38 @@
 /*********************
  *      DEFINES
  *********************/
-#define USE_SRAM        0 /* 使用外部sram为1, 否则为0 */
+
+/* 使用外部 sram 为1, 否则为0 */
+#define USE_SRAM        0
+
+/**
+ * LVGL 需要一个缓冲区用来绘制小部件
+ * 随后, 这个缓冲区的内容会通过显示设备的 `flush_cb`(显示设备刷新函数)
+ * 复制到显示设备上 这个缓冲区的大小需要大于显示设备一行的大小
+ *
+ * 这里有3中缓冲配置:
+ * 1. 单缓冲区:
+ *      LVGL 会将显示设备的内容绘制到这里, 并将他写入显示设备.
+ *
+ * 2. 双缓冲区:
+ *      LVGL 会将显示设备的内容绘制到其中一个缓冲区, 并将他写入显示设备.
+ *      需要使用 DMA 将要显示在显示设备的内容写入缓冲区.
+ *      当数据从第一个缓冲区发送时, 它将使 LVGL 能够将屏幕的下一部分绘制到
+ *      另一个缓冲区. 这样使得渲染和刷新可以并行执行.
+ *
+ * 3. 全尺寸双缓冲区
+ *      设置两个屏幕大小的全尺寸缓冲区, 并且设置 disp_drv.full_refresh = 1.
+ *      这样, LVGL将始终以`flush_cb`的形式提供整个渲染屏幕,
+ *      您只需更改帧缓冲区的地址.
+ */
+#define LV_BUF_MODE     1
+
+/* 使用 DMA2D 中断, 仅限 RGB 屏, 使用 MCU 屏不要打开此宏定义 */
+#define LV_USE_DMA2D_IT 0
+
+/* 可选: GPU 接口
+ * 如果你的 MCU 有硬件加速器 (GPU) 那么你可以使用它来为内存填充颜色 */
+#define LV_USE_GPU      0
 
 #define MY_DISP_HOR_RES (800) /* 屏幕宽度 */
 #define MY_DISP_VER_RES (480) /* 屏幕高度 */
@@ -34,18 +65,25 @@
 
 /* 显示设备初始化函数 */
 static void disp_init(void);
-
 /* 显示设备刷新函数 */
 static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
                        lv_color_t *color_p);
+#if LV_USE_GPU
 /* GPU 填充函数 (使用GPU时, 需要实现) */
-// static void gpu_fill(lv_disp_drv_t * disp_drv, lv_color_t * dest_buf,
-// lv_coord_t dest_width,
-//         const lv_area_t * fill_area, lv_color_t color);
+static void gpu_fill(lv_disp_drv_t *disp_drv, lv_color_t *dest_buf,
+                     lv_coord_t dest_width, const lv_area_t *fill_area,
+                     lv_color_t color);
+#endif /* LV_USE_GPU */
 
 /**********************
  *  STATIC VARIABLES
  **********************/
+
+#if LV_USE_DMA2D_IT
+static volatile uint8_t lv_gpu_state;
+#endif /* LV_USE_DMA2D_IT */
+
+static lv_disp_drv_t disp_drv; /* 显示设备的描述符 */
 
 /**********************
  *      MACROS
@@ -54,6 +92,7 @@ static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
+
 /**
  * @brief LCD 加速绘制函数
  *
@@ -88,33 +127,15 @@ void lv_port_disp_init(void) {
      * -----------------------*/
     disp_init();
 
+    static lv_disp_draw_buf_t draw_buf_dsc;
+
     /*-----------------------------
      * 创建一个绘图缓冲区
      *----------------------------*/
 
-    /**
-     * LVGL 需要一个缓冲区用来绘制小部件
-     * 随后, 这个缓冲区的内容会通过显示设备的 `flush_cb`(显示设备刷新函数)
-     * 复制到显示设备上 这个缓冲区的大小需要大于显示设备一行的大小
-     *
-     * 这里有3中缓冲配置:
-     * 1. 单缓冲区:
-     *      LVGL 会将显示设备的内容绘制到这里, 并将他写入显示设备.
-     *
-     * 2. 双缓冲区:
-     *      LVGL 会将显示设备的内容绘制到其中一个缓冲区, 并将他写入显示设备.
-     *      需要使用 DMA 将要显示在显示设备的内容写入缓冲区.
-     *      当数据从第一个缓冲区发送时, 它将使 LVGL 能够将屏幕的下一部分绘制到
-     *      另一个缓冲区. 这样使得渲染和刷新可以并行执行.
-     *
-     * 3. 全尺寸双缓冲区
-     *      设置两个屏幕大小的全尺寸缓冲区, 并且设置 disp_drv.full_refresh = 1.
-     *      这样, LVGL将始终以`flush_cb`的形式提供整个渲染屏幕,
-     *      您只需更改帧缓冲区的地址.
-     */
+#if LV_BUF_MODE == 1
 
-    /* 单缓冲区示例) */
-    static lv_disp_draw_buf_t draw_buf_dsc_1;
+    /* 单缓冲区示例 */
 #if USE_SRAM
     /* 设置缓冲区的大小为屏幕的全尺寸大小 */
     static lv_color_t buf_1 =
@@ -123,39 +144,65 @@ void lv_port_disp_init(void) {
     /* 初始化显示缓冲区 */
     lv_disp_draw_buf_init(&draw_buf_dsc_1, buf_1, NULL,
                           MY_DISP_HOR_RES * MY_DISP_VER_RES);
-#else
+#else  /* USE_SRAM */
     /* 设置缓冲区的大小为 10 行屏幕的大小 */
     static lv_color_t buf_1[MY_DISP_HOR_RES * 10];
     /* 初始化显示缓冲区 */
-    lv_disp_draw_buf_init(&draw_buf_dsc_1, buf_1, NULL, MY_DISP_HOR_RES * 10);
-#endif
+    lv_disp_draw_buf_init(&draw_buf_dsc, buf_1, NULL, MY_DISP_HOR_RES * 10);
+#endif /* USE_SRAM */
 
-    /* 双缓冲区示例) */
-    // static lv_disp_draw_buf_t draw_buf_dsc_2;
-    // /* 设置缓冲区的大小为 10 行屏幕的大小 */
-    // static lv_color_t buf_2_1[MY_DISP_HOR_RES * 10];
-    // /* 设置另一个缓冲区的大小为 10 行屏幕的大小 */
-    // static lv_color_t buf_2_2[MY_DISP_HOR_RES * 10];
-    // /* 初始化显示缓冲区 */
-    // lv_disp_draw_buf_init(&draw_buf_dsc_2, buf_2_1, buf_2_2,
-    //                       MY_DISP_HOR_RES * 10);
+#elif LV_BUF_MODE == 2
 
-    /* 全尺寸双缓冲区示例) 并且在下面设置 disp_drv.full_refresh = 1 */
-    // static lv_disp_draw_buf_t draw_buf_dsc_3;
-    // /* 设置一个全尺寸的缓冲区 */
-    // static lv_color_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES];
-    // /* 设置另一个全尺寸的缓冲区 */
-    // static lv_color_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES];
-    // /* 初始化显示缓冲区 */
-    // lv_disp_draw_buf_init(&draw_buf_dsc_3, buf_3_1, buf_3_2,
-    //                       MY_DISP_HOR_RES * MY_DISP_VER_RES);
+    /* 双缓冲区示例, 设置缓冲区的大小为 10 行屏幕的大小 */
+    static lv_color_t buf_2_1[MY_DISP_HOR_RES * 10];
+    /* 设置另一个缓冲区的大小为 10 行屏幕的大小 */
+    static lv_color_t buf_2_2[MY_DISP_HOR_RES * 10];
+    /* 初始化显示缓冲区 */
+    lv_disp_draw_buf_init(&draw_buf_dsc, buf_2_1, buf_2_2,
+                          MY_DISP_HOR_RES * 10);
+
+#elif LV_BUF_MODE == 3
+
+    /* 全尺寸双缓冲区, 占用空间非常恐怖, 把它放在外部 SDRAM 中.
+     * 并且在下面设置 disp_drv.full_refresh = 1 */
+#if (__ARMCC_VERSION >= 6010050) /* 使用 AC6 编译器 */
+    /**
+     * 外部 SDRAM 地址: 0xC0000000 为起始地址, 预留 1280 * 800 * 4 byte 空间作为
+     * RGB LCD 的显示缓冲区. 最大尺寸 1280 * 800, 最大色深 RGB888 (uint32_t)
+     * 根据实际情况裁剪.
+     */
+
+    /* 设置一个全尺寸的缓冲区 */
+    static lv_color_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES]
+        __attribute__((section(".bss.ARM.__at_0xC03A9800")));
+    /* 设置另一个全尺寸的缓冲区 */
+    static lv_color_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES]
+        __attribute__((section(".bss.ARM.__at_0xC0753000")));
+
+#else /* 使用 AC5 编译器 */
+
+    /* 设置一个全尺寸的缓冲区 */
+    static lv_color_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES]
+        __attribute__((at(0xC03A9800)));
+    /* 设置另一个全尺寸的缓冲区 */
+    static lv_color_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES]
+        __attribute__((at(0xC0753000)));
+
+#endif /* __ARMCC_VERSION */
+
+    /* 初始化显示缓冲区 */
+    lv_disp_draw_buf_init(&draw_buf_dsc, buf_3_1, buf_3_2,
+                          MY_DISP_HOR_RES * MY_DISP_VER_RES);
+
+#else /* LV_BUF_MODE */
+#error "Unknow LV_BUF_MODE! "
+#endif /* LV_BUF_MODE */
 
     /*-----------------------------------
      * 在 LVGL 中注册显示设备
      *----------------------------------*/
 
-    static lv_disp_drv_t disp_drv; /* 显示设备的描述符 */
-    lv_disp_drv_init(&disp_drv);   /* 初始化为默认值 */
+    lv_disp_drv_init(&disp_drv); /* 初始化为默认值 */
 
     /* 建立访问显示设备的函数  */
 
@@ -170,10 +217,12 @@ void lv_port_disp_init(void) {
     disp_drv.flush_cb = disp_flush;
 
     /* 设置显示缓冲区 */
-    disp_drv.draw_buf = &draw_buf_dsc_1;
+    disp_drv.draw_buf = &draw_buf_dsc;
 
-    /* 全尺寸双缓冲区示例)*/
-    // disp_drv.full_refresh = 1
+#if LV_BUF_MODE == 3
+    /* 全尺寸双缓冲区示例 */
+    disp_drv.full_refresh = 1;
+#endif /* LV_BUF_MODE == 3 */
 
     /* 如果您有GPU, 请使用颜色填充内存阵列
      * 注意, 你可以在 lv_conf.h 中使能 LVGL 内置支持的 GPUs
@@ -184,6 +233,31 @@ void lv_port_disp_init(void) {
     lv_disp_drv_register(&disp_drv);
 }
 
+#if LV_USE_DMA2D_IT
+
+/**
+ * @brief DMA2D 中断服务函数
+ *
+ */
+void DMA2D_IRQHandler(void) {
+    HAL_DMA2D_IRQHandler(&dma2d_handle);
+}
+
+/**
+ * @brief DMA2D 中断传输完成回调
+ *
+ * @param hdma2d
+ */
+static void dma2d_cplt_callback(DMA2D_HandleTypeDef *hdma2d) {
+    UNUSED(hdma2d);
+    /* 刷新显示设备 */
+    if (lv_gpu_state == 1) {
+        lv_gpu_state = 0;
+        lv_disp_flush_ready(&disp_drv);
+    }
+}
+#endif /* LV_USE_DMA2D_IT */
+
 /**********************
  *   STATIC FUNCTIONS
  **********************/
@@ -193,8 +267,17 @@ void lv_port_disp_init(void) {
  *
  */
 static void disp_init(void) {
-    lcd_init();         /* 初始化LCD */
+    lcd_init();         /* 初始化 LCD */
     lcd_display_dir(1); /* 设置横屏 */
+
+#if LV_USE_DMA2D_IT
+    /* 打开 DMA2D 中断 */
+    HAL_NVIC_SetPriority(DMA2D_IRQn, 3, 0);
+    HAL_NVIC_EnableIRQ(DMA2D_IRQn);
+
+    HAL_DMA2D_RegisterCallback(&dma2d_handle, HAL_DMA2D_TRANSFERCOMPLETE_CB_ID,
+                               dma2d_cplt_callback);
+#endif /* LV_USE_DMA2D_IT */
 }
 
 /**
@@ -208,6 +291,33 @@ static void disp_init(void) {
  */
 static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
                        lv_color_t *color_p) {
+#if LV_USE_DMA2D_IT
+    uint32_t off_line_src = lcddev.width - (area->x2 - area->x1 + 1);
+    uint32_t addr =
+        LTDC_FRAME_BUF_ADDR + 2 * (lcddev.width * area->y1 + area->x1);
+    /* 中断传输, 内存到内存 */
+    DMA2D->CR = 0x00000000UL | (1 << 9);
+    /* 源地址 */
+    DMA2D->FGMAR = (uint32_t)(uint16_t *)(color_p);
+    /* 目标地址 */
+    DMA2D->OMAR = (uint32_t)addr;
+    /* 输入偏移 */
+    DMA2D->FGOR = 0;
+    /* 输出偏移 */
+    DMA2D->OOR = off_line_src;
+
+    /* 前景层和输出区域都采用的 RGB565 颜色格式 */
+    DMA2D->FGPFCCR = DMA2D_OUTPUT_RGB565;
+    DMA2D->OPFCCR = DMA2D_OUTPUT_RGB565;
+    /* 多少行 */
+    DMA2D->NLR = (area->y2 - area->y1 + 1) | ((area->x2 - area->x1 + 1) << 16);
+
+    /* 开启中断 */
+    DMA2D->CR |= DMA2D_IT_TC | DMA2D_IT_TE | DMA2D_IT_CE;
+    /* 启动传输 */
+    DMA2D->CR |= DMA2D_CR_START;
+    lv_gpu_state = 1;
+#else  /* LV_USE_DMA2D_IT */
     /* 在指定区域内填充指定颜色块 */
     lcd_color_fill(area->x1, area->y1, area->x2, area->y2, (uint16_t *)color_p);
     /* MCU 屏幕可以使用下面的方式加速 */
@@ -215,12 +325,10 @@ static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
 
     /* 重要!!! 通知图形库, 已经刷新完毕了 */
     lv_disp_flush_ready(disp_drv);
+#endif /* LV_USE_DMA2D_IT */
 }
 
-/* 可选: GPU 接口
- * 如果你的 MCU 有硬件加速器 (GPU) 那么你可以使用它来为内存填充颜色 */
-
-#if 0
+#if LV_USE_GPU
 /**
  * @brief 使用 GPU 进行颜色填充
  *
@@ -229,7 +337,7 @@ static void disp_flush(lv_disp_drv_t *disp_drv, const lv_area_t *area,
  * @param dest_width 目标缓冲区的宽度
  * @param fill_area 填充的区域
  * @param color 颜色数组
- * @note 如有 MCU 有硬件加速器 (GPU),那么可以用它来为内存进行颜色填充
+ * @note 如有 MCU 有硬件加速器 (GPU), 那么可以用它来为内存进行颜色填充
  */
 static void gpu_fill(lv_disp_drv_t *disp_drv, lv_color_t *dest_buf,
                      lv_coord_t dest_width, const lv_area_t *fill_area,
@@ -246,7 +354,7 @@ static void gpu_fill(lv_disp_drv_t *disp_drv, lv_color_t *dest_buf,
     }
 }
 
-#endif
+#endif /* LV_USE_GPU */
 
 #else /*Enable this file at the top*/
 

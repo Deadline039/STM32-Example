@@ -172,6 +172,9 @@
               },
               {
                 "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_ltdc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dma2d.c"
               }
             ],
             "folders": []

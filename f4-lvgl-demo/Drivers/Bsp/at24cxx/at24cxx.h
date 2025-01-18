@@ -58,10 +58,4 @@ void at24cxx_write_byte(uint16_t address, uint8_t byte);
 void at24cxx_read(uint16_t address, uint8_t *data_buf, uint16_t data_len);
 void at24cxx_write(uint16_t address, uint8_t *data_buf, uint16_t data_len);
 
-uint8_t at24cxx_read_byte(uint16_t address);
-void at24cxx_write_byte(uint16_t address, uint8_t byte);
-
-void at24cxx_read(uint16_t address, uint8_t *data_buf, uint16_t data_len);
-void at24cxx_write(uint16_t address, uint8_t *data_buf, uint16_t data_len);
-
 #endif /* __AT24CXX_H */

@@ -618,25 +618,20 @@ void lcd_init(void) {
         gpio_init_struct.Pull = GPIO_PULLUP;           /* 上拉 */
         gpio_init_struct.Speed = GPIO_SPEED_FREQ_HIGH; /* 高速 */
         gpio_init_struct.Alternate = GPIO_AF12_FMC;    /* 复用为 FMC */
-        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_CS_GPIO_PORT),
-                      &gpio_init_struct); /* 初始化 LCD_CS 引脚 */
+        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_CS_GPIO_PORT), &gpio_init_struct);
 
         gpio_init_struct.Pin = LCD_WR_GPIO_PIN;
-        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_WR_GPIO_PORT),
-                      &gpio_init_struct); /* 初始化 LCD_CS 引脚 */
+        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_WR_GPIO_PORT), &gpio_init_struct);
 
         gpio_init_struct.Pin = LCD_RD_GPIO_PIN;
-        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_RD_GPIO_PORT),
-                      &gpio_init_struct); /* 初始化 LCD_CS 引脚 */
+        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_RD_GPIO_PORT), &gpio_init_struct);
 
         gpio_init_struct.Pin = LCD_RS_GPIO_PIN;
-        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_RS_GPIO_PORT),
-                      &gpio_init_struct); /* 初始化 LCD_CS 引脚 */
+        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_RS_GPIO_PORT), &gpio_init_struct);
 
         gpio_init_struct.Pin = LCD_BL_GPIO_PIN;
         gpio_init_struct.Mode = GPIO_MODE_OUTPUT_PP; /* 推挽输出 */
-        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_BL_GPIO_PORT),
-                      &gpio_init_struct); /* 初始化 LCD_CS 引脚 */
+        HAL_GPIO_Init(CSP_GPIO_PORT(LCD_BL_GPIO_PORT), &gpio_init_struct);
 
         sram_handle.Instance = FMC_NORSRAM_DEVICE;
         sram_handle.Extended = FMC_NORSRAM_EXTENDED_DEVICE;

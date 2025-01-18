@@ -71,7 +71,7 @@
 /**
  * @brief 5 点校准触摸屏校准参数 (电容屏不需要校准)
  */
-typedef struct __packed {
+typedef struct __attribute__((packed)) {
     float xfac; /*!< 5 点校准法 x 方向比例因子 */
     float yfac; /*!< 5 点校准法 y 方向比例因子 */
     short xc;   /*!< 中心 X 坐标物理值 (AD 值) */

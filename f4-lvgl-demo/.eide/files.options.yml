@@ -19,3 +19,6 @@ options:
     Debug:
         virtualPathFiles:
             <virtual_root>/Middlewares/LVGL/**: -w
+    lv_music_demo:
+        virtualPathFiles:
+            <virtual_root>/Middlewares/LVGL/**: -w

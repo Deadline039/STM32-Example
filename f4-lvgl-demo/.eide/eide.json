@@ -42,6 +42,12 @@
           },
           {
             "path": "Drivers/Bsp/touch/touch.c"
+          },
+          {
+            "path": "Drivers/Bsp/sd_card/sdio_sdcard.c"
+          },
+          {
+            "path": "Drivers/Bsp/w25qxx/w25qxx.c"
           }
         ],
         "folders": []
@@ -175,6 +181,15 @@
               },
               {
                 "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dma2d.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_sd.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_spi.c"
               }
             ],
             "folders": []
@@ -864,7 +879,6 @@
         "<virtual_root>/Drivers/CSP/CAN_STM32F4xx.c",
         "<virtual_root>/Drivers/CSP/ETH_STM32F4xx.c",
         "<virtual_root>/Drivers/CSP/RTC_STM32F4xx.c",
-        "<virtual_root>/Drivers/CSP/SPI_STM32F4xx.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_can.c",

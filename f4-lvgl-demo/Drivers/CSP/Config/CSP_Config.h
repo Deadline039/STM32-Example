@@ -1991,10 +1991,10 @@
 // </e>
 
 // <e> SPI5 (Serial Peripheral Interface 5)
-#define SPI5_ENABLE             0
+#define SPI5_ENABLE             1
 
 //   <o> SPI5_MISO Pin <0=>Not Used <1=>PA12 <2=>PE5 <3=>PE13 <4=>PF8 <5=>PH7
-#define SPI5_MISO_PORT_ID       0
+#define SPI5_MISO_PORT_ID       4
 #if (SPI5_MISO_PORT_ID == 0)
 #define SPI5_MISO 0
 #elif (SPI5_MISO_PORT_ID == 1)
@@ -2023,7 +2023,7 @@
 
 //   <o> SPI5_MOSI Pin <0=>Not Used <1=>PA10 <2=>PB8 <3=>PE6 <4=>PE14 <5=>PF9
 //   <6=>PF11
-#define SPI5_MOSI_PORT_ID 0
+#define SPI5_MOSI_PORT_ID 5
 #if (SPI5_MOSI_PORT_ID == 0)
 #define SPI5_MOSI 0
 #elif (SPI5_MOSI_PORT_ID == 1)
@@ -2055,7 +2055,7 @@
 #endif
 
 //   <o> SPI5_SCK Pin <0=>PB0 <1=>PE2 <2=>PE12 <3=>PF7 <4=>PH6
-#define SPI5_SCK_PORT_ID 0
+#define SPI5_SCK_PORT_ID 3
 #if (SPI5_SCK_PORT_ID == 0)
 #define SPI5_SCK_PORT B
 #define SPI5_SCK_PIN  GPIO_PIN_0

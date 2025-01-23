@@ -27,10 +27,6 @@ void task3(void *pvParameters);
  *
  */
 void freertos_start(void) {
-    lv_init();
-    lv_port_disp_init();
-    lv_port_indev_init();
-
     xTaskCreate(start_task, "start_task", 512, NULL, 2, &start_task_handle);
     vTaskStartScheduler();
 }
@@ -42,6 +38,10 @@ void freertos_start(void) {
  */
 void start_task(void *pvParameters) {
     UNUSED(pvParameters);
+    lv_init();
+    lv_port_disp_init();
+    lv_port_indev_init();
+
     taskENTER_CRITICAL();
 
     xTaskCreate(task1, "task1", 512, NULL, 2, &task1_handle);

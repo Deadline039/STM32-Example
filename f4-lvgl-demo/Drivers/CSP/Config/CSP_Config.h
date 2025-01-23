@@ -2733,7 +2733,7 @@
 // </e>
 
 // <e> RTC (Real Time Clock)
-#define RTC_ENABLE            0
+#define RTC_ENABLE            1
 
 //   <e> RTC Wake Up Interrupt
 #define RTC_WKUP_IT_ENABLE    0

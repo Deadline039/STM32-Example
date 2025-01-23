@@ -814,6 +814,15 @@
                       }
                     ],
                     "folders": []
+                  },
+                  {
+                    "name": "fsdrv",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/libs/fsdrv/lv_fs_fatfs.c"
+                      }
+                    ],
+                    "folders": []
                   }
                 ]
               },
@@ -848,6 +857,24 @@
                 "folders": []
               }
             ]
+          },
+          {
+            "name": "FATFS",
+            "files": [
+              {
+                "path": "Middlewares/FATFS/diskio.c"
+              },
+              {
+                "path": "Middlewares/FATFS/ff.c"
+              },
+              {
+                "path": "Middlewares/FATFS/ffsystem.c"
+              },
+              {
+                "path": "Middlewares/FATFS/ffunicode.c"
+              }
+            ],
+            "folders": []
           }
         ]
       },
@@ -878,7 +905,6 @@
       "excludeList": [
         "<virtual_root>/Drivers/CSP/CAN_STM32F4xx.c",
         "<virtual_root>/Drivers/CSP/ETH_STM32F4xx.c",
-        "<virtual_root>/Drivers/CSP/RTC_STM32F4xx.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_can.c",
@@ -891,8 +917,6 @@
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_exti.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_i2s_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_iwdg.c",
-        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_rtc_ex.c",
-        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_rtc.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_usart.c",
@@ -994,7 +1018,8 @@
           "Middlewares/LVGL/GUI/lvgl",
           "Middlewares/LVGL/GUI/lvgl/src",
           "Middlewares/LVGL/GUI/porting",
-          "Middlewares/LVGL/APP"
+          "Middlewares/LVGL/APP",
+          "Middlewares/FATFS"
         ],
         "libList": [],
         "defineList": [

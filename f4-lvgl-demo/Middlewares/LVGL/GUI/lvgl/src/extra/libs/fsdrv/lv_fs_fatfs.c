@@ -87,11 +87,34 @@ void lv_fs_fatfs_init(void)
  *   STATIC FUNCTIONS
  **********************/
 
+#include <bsp.h>
+
+static FATFS fat;
+
 /*Initialize your Storage device and File system.*/
 static void fs_init(void)
 {
-    /*Initialize the SD card and FatFS itself.
-     *Better to do it in your code to keep this library untouched for easy updating*/
+    uint8_t times = 0;
+
+    while (times < 10)
+    {
+        if (sdcard_init() == SD_OPERATE_OK)
+        {
+            break;
+        }
+        ++times;
+    }
+
+    if (times >= 10)
+    {
+        printf("No found SD Card. \n");
+        return;
+    }
+
+    if (f_mount(&fat, "0:", 1) != FR_OK)
+    {
+        printf("SD card mount failed. \n");
+    }
 }
 
 /**

@@ -129,6 +129,8 @@ w25qxx_result_t w25qxx_init(w25qxx_handle_t *w25qxx, bool use_qspi) {
                                             .Pull = GPIO_PULLUP,
                                             .Speed = GPIO_SPEED_FREQ_VERY_HIGH};
         HAL_GPIO_Init(GPIOF, &gpio_init_stuct);
+        /* SPI 提速 */
+        spi_change_speed(w25qxx->handle.hspi, SPI_BAUDRATEPRESCALER_2);
     }
 #endif /* W25QXX_USE_SPI */
 

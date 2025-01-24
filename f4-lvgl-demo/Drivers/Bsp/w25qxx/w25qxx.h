@@ -89,6 +89,7 @@ typedef enum {
 } w25qxx_result_t;
 
 w25qxx_result_t w25qxx_init(w25qxx_handle_t *w25qxx, bool use_qspi);
+w25qxx_result_t w25qxx_deinit(w25qxx_handle_t *w25qxx);
 uint32_t w25qxx_read_id(w25qxx_handle_t *w25qxx);
 uint8_t w25qxx_get_status(w25qxx_handle_t *w25qxx, uint8_t reg);
 uint8_t w25qxx_set_status(w25qxx_handle_t *w25qxx, uint8_t reg, uint8_t status);

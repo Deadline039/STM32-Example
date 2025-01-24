@@ -61,6 +61,7 @@ static inline void cs_off(w25qxx_handle_t *w25qxx) {
  */
 static w25qxx_result_t w25qxx_transmit(w25qxx_handle_t *w25qxx, uint8_t *buf,
                                        uint32_t len) {
+    HAL_StatusTypeDef res = HAL_ERROR;
 #ifdef W25QXX_USE_QSPI
     if (w25qxx->use_qspi) {
         /** @todo QSPI transmit function. */
@@ -70,8 +71,13 @@ static w25qxx_result_t w25qxx_transmit(w25qxx_handle_t *w25qxx, uint8_t *buf,
 #endif /* W25QXX_USE_QSPI */
 
 #if W25QXX_USE_SPI
-    if (HAL_SPI_Transmit(w25qxx->handle.hspi, buf, len, HAL_MAX_DELAY) ==
-        HAL_OK) {
+    if (w25qxx->handle.hspi->hdmatx != NULL) {
+        res = HAL_SPI_Transmit_DMA(w25qxx->handle.hspi, buf, len);
+    } else {
+        res = HAL_SPI_Transmit(w25qxx->handle.hspi, buf, len, 1000);
+    }
+
+    if (res == HAL_OK) {
         return W25QXX_OK;
     }
 #endif /* W25QXX_USE_SPI */
@@ -89,6 +95,7 @@ static w25qxx_result_t w25qxx_transmit(w25qxx_handle_t *w25qxx, uint8_t *buf,
  */
 static w25qxx_result_t w25qxx_receive(w25qxx_handle_t *w25qxx, uint8_t *buf,
                                       uint32_t len) {
+    HAL_StatusTypeDef res = HAL_ERROR;
 #ifdef W25QXX_USE_QSPI
     if (w25qxx->use_qspi) {
         /** @todo QSPI receive function. */
@@ -98,8 +105,13 @@ static w25qxx_result_t w25qxx_receive(w25qxx_handle_t *w25qxx, uint8_t *buf,
 #endif /* W25QXX_USE_QSPI */
 
 #if W25QXX_USE_SPI
-    if (HAL_SPI_Receive(w25qxx->handle.hspi, buf, len, HAL_MAX_DELAY) ==
-        HAL_OK) {
+    if (w25qxx->handle.hspi->hdmarx != NULL) {
+        res = HAL_SPI_Receive_DMA(w25qxx->handle.hspi, buf, len);
+    } else {
+        res = HAL_SPI_Receive(w25qxx->handle.hspi, buf, len, 1000);
+    }
+
+    if (res == HAL_OK) {
         return W25QXX_OK;
     }
 #endif /* W25QXX_USE_SPI */
@@ -113,12 +125,16 @@ static w25qxx_result_t w25qxx_receive(w25qxx_handle_t *w25qxx, uint8_t *buf,
  * @param w25qxx W25QXX 句柄
  * @param use_qspi 是否使用 QSPI (需要预先打开`W25QXX_USE_QSPI`宏定义)
  * @return 是否初始化成功
- * @note 需要预先初始化 SPI GPIO 等外设
+ * @note 需要预先初始化 SPI. 函数会初始化片选引脚, 但是不会开启片选引脚时钟
  */
 w25qxx_result_t w25qxx_init(w25qxx_handle_t *w25qxx, bool use_qspi) {
     uint8_t tmp;
     w25qxx_result_t result = W25QXX_OK;
     uint32_t id = w25qxx_read_id(w25qxx);
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
 
     w25qxx->use_qspi = use_qspi;
 
@@ -214,6 +230,30 @@ w25qxx_result_t w25qxx_init(w25qxx_handle_t *w25qxx, bool use_qspi) {
 }
 
 /**
+ * @brief 反初始化 W25QXX
+ *
+ * @param w25qxx W25QXX 句柄
+ * @return 操作状态
+ * @note 该函数会反初始化片选引脚为 RESET 状态.
+ */
+w25qxx_result_t w25qxx_deinit(w25qxx_handle_t *w25qxx) {
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
+    if (w25qxx->use_qspi != true) {
+        HAL_GPIO_DeInit(w25qxx->cs_port, w25qxx->cs_pin);
+    }
+
+    if (w25qxx->buf != NULL) {
+        CSP_FREE(w25qxx->buf);
+    }
+
+    memset(w25qxx, 0, sizeof(w25qxx_handle_t));
+    return W25QXX_OK;
+}
+
+/**
  * @brief 读取芯片 ID
  *
  * @param w25qxx W25QXX 句柄
@@ -222,6 +262,11 @@ w25qxx_result_t w25qxx_init(w25qxx_handle_t *w25qxx, bool use_qspi) {
 uint32_t w25qxx_read_id(w25qxx_handle_t *w25qxx) {
     uint32_t ret = 0;
     uint8_t buf[4];
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     cs_on(w25qxx);
     buf[0] = W25QXX_GET_ID;
     buf[1] = 0x00;
@@ -245,6 +290,11 @@ uint32_t w25qxx_read_id(w25qxx_handle_t *w25qxx) {
 uint8_t w25qxx_get_status(w25qxx_handle_t *w25qxx, uint8_t reg) {
     uint8_t ret = 0;
     uint8_t buf = reg;
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     cs_on(w25qxx);
     w25qxx_transmit(w25qxx, &buf, 1);
     w25qxx_receive(w25qxx, &buf, 1);
@@ -265,6 +315,11 @@ w25qxx_result_t w25qxx_set_status(w25qxx_handle_t *w25qxx, uint8_t reg,
                                   uint8_t status) {
     w25qxx_result_t ret = W25QXX_ERROR;
     uint8_t buf[2];
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     buf[0] = reg;
     buf[1] = status;
     cs_on(w25qxx);
@@ -282,6 +337,11 @@ w25qxx_result_t w25qxx_set_status(w25qxx_handle_t *w25qxx, uint8_t reg,
 w25qxx_result_t w25qxx_write_enable(w25qxx_handle_t *w25qxx) {
     w25qxx_result_t ret = W25QXX_ERROR;
     uint8_t buf[1];
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     cs_on(w25qxx);
     buf[0] = W25QXX_WRITE_ENABLE;
     ret = w25qxx_transmit(w25qxx, buf, 1);
@@ -348,6 +408,11 @@ w25qxx_result_t w25qxx_read(w25qxx_handle_t *w25qxx, uint32_t address,
                             uint8_t *buf, uint32_t len) {
     uint8_t cmd = W25QXX_READ_DATA;
     w25qxx_result_t ret;
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     cs_on(w25qxx);
     w25qxx_transmit(w25qxx, &cmd, 1);
     w25qxx_send_addr(w25qxx, address);
@@ -369,6 +434,7 @@ w25qxx_result_t w25qxx_read(w25qxx_handle_t *w25qxx, uint32_t address,
 static w25qxx_result_t w25qxx_write_page(w25qxx_handle_t *w25qxx, uint8_t *buf,
                                          uint32_t addr, uint16_t len) {
     uint8_t cmd = W25QXX_PAGE_PROGRAM;
+
     if (w25qxx_write_enable(w25qxx) != W25QXX_OK) {
         return W25QXX_ERROR;
     }
@@ -467,6 +533,10 @@ w25qxx_result_t w25qxx_write(w25qxx_handle_t *w25qxx, uint32_t address,
 
     uint16_t i;
 
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     pos = address / 4096;    /* 扇区地址 */
     offset = address % 4096; /* 在扇区内的偏移 */
     remain = 4096 - offset;  /* 扇区剩余空间大小 */
@@ -546,6 +616,11 @@ w25qxx_result_t w25qxx_write(w25qxx_handle_t *w25qxx, uint32_t address,
  */
 w25qxx_result_t w25qxx_erase(w25qxx_handle_t *w25qxx, uint32_t address) {
     uint8_t cmd = W25QXX_SECTOR_ERASE;
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     address *= 4096;
     if (w25qxx_write_enable(w25qxx) != W25QXX_OK) {
         return W25QXX_ERROR;
@@ -575,6 +650,11 @@ w25qxx_result_t w25qxx_erase(w25qxx_handle_t *w25qxx, uint32_t address) {
  */
 w25qxx_result_t w25qxx_chip_erase(w25qxx_handle_t *w25qxx) {
     uint8_t cmd = W25QXX_CHIP_ERASE;
+
+    if (w25qxx == NULL) {
+        return W25QXX_ERROR;
+    }
+
     w25qxx_write_enable(w25qxx);
     if (w25qxx_wait_for_ready(w25qxx, 1000) != W25QXX_OK) {
         return W25QXX_TIMEOUT;

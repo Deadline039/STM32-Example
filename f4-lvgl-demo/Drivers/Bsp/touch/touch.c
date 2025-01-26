@@ -42,43 +42,36 @@ tp_dev_t tp_dev = {.init = tp_init, .adjust = tp_adjust, .scan = tp_scan};
 
 #if TP_SAVE_ADJ_DATA
 #include "../at24cxx/at24cxx.h"
+extern at24cxx_handle_t at24c02_handle;
 #endif /* TP_SAVE_ADJ_DATA */
 
 /**
  * @brief 保存校准参数
  *
+ * @param data 写入的数据
+ * @param len 写入长度
  * @note 参数默认保存在 EEPROM 芯片里面 (24C02), 起始地址为
  *       `TP_SAVE_ADJ_ADDR`. 占用大小为 13 字节
+ *       可以修改或者重定向此函数以支持其他存储芯片
  */
-void tp_save_adjust_data(void) {
+__weak void tp_save_adjust_data(const uint8_t *data, uint16_t len) {
 #if TP_SAVE_ADJ_DATA
-    uint8_t *p = (uint8_t *)&tp_dev.adj_data;
-
-    /* 保存12个字节数据 (xfac,yfac,xc,yc) */
-    at24cxx_write(TP_SAVE_ADJ_ADDR, p, sizeof(tp_dev.adj_data));
-    /* 记录已经校准过 */
-    at24cxx_write_byte(TP_SAVE_ADJ_ADDR + sizeof(tp_dev.adj_data), 0X0A);
+    at24cxx_write(&at24c02_handle, TP_SAVE_ADJ_ADDR, data, len);
 #endif /* TP_SAVE_ADJ_DATA */
 }
 
 /**
  * @brief 获取保存在 EEPROM 里面的校准值
  *
- * @return 是否已校准
- * @retval - 0: 获取失败, 要重新校准
- * @retval - 1: 成功获取数据
+ * @param[out] data 读取数据的缓冲区
+ * @param len 读取长度
+ * @note 参数默认保存在 EEPROM 芯片里面 (24C02), 起始地址为
+ *       `TP_SAVE_ADJ_ADDR`. 占用大小为 13 字节
+ *       可以修改或者重定向此函数以支持其他存储芯片
  */
-uint8_t tp_get_adjust_data(void) {
+__weak void tp_read_adjust_data(uint8_t *data, uint16_t len) {
 #if TP_SAVE_ADJ_DATA
-    if (at24cxx_read_byte(TP_SAVE_ADJ_ADDR + sizeof(tp_dev.adj_data)) != 0x0A) {
-        return 0;
-    }
-
-    uint8_t *p = (uint8_t *)&tp_dev.adj_data;
-
-    at24cxx_read(TP_SAVE_ADJ_ADDR, p, sizeof(tp_dev.adj_data));
-
-    return 1;
+    at24cxx_read(&at24c02_handle, TP_SAVE_ADJ_ADDR, data, len);
 #endif /* TP_SAVE_ADJ_DATA */
 }
 
@@ -285,7 +278,9 @@ void tp_adjust(void) {
                     lcd_show_string(35, 110, lcddev.width, lcddev.height, 16,
                                     "Touch Screen Adjust OK!", BLUE);
                     delay_ms(1000);
-                    tp_save_adjust_data();
+                    tp_dev.adj_data.adj_flag = 0x0A;
+                    tp_save_adjust_data(&tp_dev.adj_data,
+                                        sizeof(tp_dev.adj_data));
 
                     lcd_clear(WHITE); /* 清屏 */
 
@@ -301,7 +296,7 @@ void tp_adjust(void) {
         outtime++;
 
         if (outtime > 1000) {
-            tp_get_adjust_data();
+            tp_read_adjust_data(&tp_dev.adj_data, sizeof(tp_dev.adj_data));
             break;
         }
     }
@@ -404,15 +399,15 @@ uint8_t tp_init(void) {
 
     tp_read_xy(&tp_dev.x[0], &tp_dev.y[0]); /* 第一次读取初始化 */
 
-    if (tp_get_adjust_data()) {
+    tp_read_adjust_data(&tp_dev.adj_data, sizeof(tp_dev.adj_data));
+    if (tp_dev.adj_data.adj_flag == 0x0A) {
         return 0; /* 已经校准 */
     } else {
         /* 未校准 */
         lcd_clear(WHITE); /* 清屏 */
         tp_adjust();      /* 屏幕校准 */
     }
-
-    tp_get_adjust_data();
+    tp_read_adjust_data(&tp_dev.adj_data, sizeof(tp_dev.adj_data));
 
     return 1;
 }

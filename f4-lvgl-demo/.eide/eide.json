@@ -63,6 +63,9 @@
           },
           {
             "path": "User/Application/Src/rtos_tasks.c"
+          },
+          {
+            "path": "User/Application/Src/at24c02_instance.c"
           }
         ],
         "folders": []

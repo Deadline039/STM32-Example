@@ -13,6 +13,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/*****************************************************************************
+ * @defgroup Include files.
+ * @{
+ */
+
 #include "bsp.h"
 
 #include "FreeRTOS.h"
@@ -24,7 +29,32 @@ extern "C" {
 
 #include "ui.h"
 
+/**
+ * @}
+ */
+
+/*****************************************************************************
+ * @defgroup Public variables.
+ * @{
+ */
+
+extern at24cxx_handle_t at24c02_handle;
+
+/**
+ * @}
+ */
+
+/*****************************************************************************
+ * @defgroup Public functions.
+ * @{
+ */
+
 void freertos_start(void);
+void at24c02_instance_init(void);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

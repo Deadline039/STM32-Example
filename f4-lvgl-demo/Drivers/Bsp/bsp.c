@@ -23,7 +23,6 @@ void bsp_init(void) {
     led_init();
     key_init();
     sdram_init();
-    ftl_init();
 }
 
 #ifdef USE_FULL_ASSERT

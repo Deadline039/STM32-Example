@@ -48,6 +48,12 @@
           },
           {
             "path": "Drivers/Bsp/w25qxx/w25qxx.c"
+          },
+          {
+            "path": "Drivers/Bsp/nand/ftl.c"
+          },
+          {
+            "path": "Drivers/Bsp/nand/nand.c"
           }
         ],
         "folders": []
@@ -193,6 +199,9 @@
               },
               {
                 "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_spi.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_nand.c"
               }
             ],
             "folders": []

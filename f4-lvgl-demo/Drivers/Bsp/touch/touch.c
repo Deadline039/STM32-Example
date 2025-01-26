@@ -279,7 +279,7 @@ void tp_adjust(void) {
                                     "Touch Screen Adjust OK!", BLUE);
                     delay_ms(1000);
                     tp_dev.adj_data.adj_flag = 0x0A;
-                    tp_save_adjust_data(&tp_dev.adj_data,
+                    tp_save_adjust_data((const uint8_t *)&tp_dev.adj_data,
                                         sizeof(tp_dev.adj_data));
 
                     lcd_clear(WHITE); /* 清屏 */
@@ -296,7 +296,8 @@ void tp_adjust(void) {
         outtime++;
 
         if (outtime > 1000) {
-            tp_read_adjust_data(&tp_dev.adj_data, sizeof(tp_dev.adj_data));
+            tp_read_adjust_data((uint8_t *)&tp_dev.adj_data,
+                                sizeof(tp_dev.adj_data));
             break;
         }
     }
@@ -399,7 +400,7 @@ uint8_t tp_init(void) {
 
     tp_read_xy(&tp_dev.x[0], &tp_dev.y[0]); /* 第一次读取初始化 */
 
-    tp_read_adjust_data(&tp_dev.adj_data, sizeof(tp_dev.adj_data));
+    tp_read_adjust_data((uint8_t *)&tp_dev.adj_data, sizeof(tp_dev.adj_data));
     if (tp_dev.adj_data.adj_flag == 0x0A) {
         return 0; /* 已经校准 */
     } else {
@@ -407,7 +408,7 @@ uint8_t tp_init(void) {
         lcd_clear(WHITE); /* 清屏 */
         tp_adjust();      /* 屏幕校准 */
     }
-    tp_read_adjust_data(&tp_dev.adj_data, sizeof(tp_dev.adj_data));
+    tp_read_adjust_data((uint8_t *)&tp_dev.adj_data, sizeof(tp_dev.adj_data));
 
     return 1;
 }

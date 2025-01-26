@@ -23,7 +23,6 @@ void bsp_init(void) {
     led_init();
     key_init();
     sdram_init();
-    at24cxx_init(&i2c2_handle);
 }
 
 #ifdef USE_FULL_ASSERT

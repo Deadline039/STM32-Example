@@ -39,7 +39,7 @@ void freertos_start(void) {
 void start_task(void *pvParameters) {
     UNUSED(pvParameters);
 
-    at24c02_instance_init();
+    at24c02_dev_init();
     lv_init();
     lv_port_disp_init();
     lv_port_indev_init();

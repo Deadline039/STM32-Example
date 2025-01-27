@@ -29,6 +29,11 @@ extern "C" {
 
 #include "ui.h"
 
+#include "usbd_conf.h"
+#include "usbd_core.h"
+#include "usbd_desc.h"
+#include "usbd_msc.h"
+#include "usbd_storage.h"
 /**
  * @}
  */
@@ -40,6 +45,8 @@ extern "C" {
 
 extern at24cxx_handle_t at24c02_handle;
 
+extern TaskHandle_t usb_app_handle;
+
 /**
  * @}
  */
@@ -50,8 +57,9 @@ extern at24cxx_handle_t at24c02_handle;
  */
 
 void freertos_start(void);
-void at24c02_instance_init(void);
+void at24c02_dev_init(void);
 
+void usb_app(void *pvParameters);
 /**
  * @}
  */

@@ -8,11 +8,15 @@
 /*-----------------------------------------------------------------------*/
 
 #include "diskio.h" /* Declarations of disk functions */
-#include "ff.h"     /* Obtains integer types */
 #include "bsp.h"
+#include "ff.h" /* Obtains integer types */
 
 /* Definitions of physical drive number for each drive */
-#define DEV_SDCARD 0 /* SD-Card to physical drive 0 */
+#define DEV_SDCARD 0 /* SD-Card to physical drive 0    */
+#define DEV_NAND   1 /* NAND flash to physical drive 1 */
+
+uint32_t NAND_FLASH_SECTOR_COUNT;
+uint8_t NAND_FLASH_BLOCK_SIZE;
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -31,12 +35,23 @@ DSTATUS disk_status(
 DSTATUS disk_initialize(
     BYTE pdrv /* Physical drive nmuber to identify the drive */
 ) {
-    sdcard_status_t res;
-    UNUSED(pdrv);
+    uint8_t res;
 
-    res = sdcard_init();
+    switch (pdrv) {
+        case DEV_SDCARD:
+            res = sdcard_init();
+            break;
 
-    if (res != SD_OPERATE_OK) {
+        case DEV_NAND:
+            res = ftl_init();
+            break;
+
+        default:
+            res = 1;
+            break;
+    }
+
+    if (res) {
         return STA_NOINIT;
     } else {
         return 0;
@@ -52,16 +67,27 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
                   LBA_t sector, /* Start sector in LBA */
                   UINT count    /* Number of sectors to read */
 ) {
-    sdcard_status_t res;
-    UNUSED(pdrv);
+    uint8_t res;
 
     if (!count) {
         return RES_PARERR;
     }
 
-    res = sdcard_read_disk((uint8_t *)buff, sector, count);
+    switch (pdrv) {
+        case DEV_SDCARD:
+            res = sdcard_read_disk((uint8_t *)buff, sector, count);
+            break;
 
-    if (res == SD_OPERATE_OK) {
+        case DEV_NAND:
+            res = ftl_read_sectors(buff, sector, 512, count);
+            break;
+
+        default:
+            res = 1;
+            break;
+    }
+
+    if (res) {
         return RES_OK;
     } else {
         return RES_ERROR;
@@ -79,22 +105,32 @@ DRESULT disk_write(BYTE pdrv, /* Physical drive nmuber to identify the drive */
                    LBA_t sector,     /* Start sector in LBA */
                    UINT count        /* Number of sectors to write */
 ) {
-    sdcard_status_t res;
-    UNUSED(pdrv);
+    uint8_t res;
 
     if (!count) {
         return RES_PARERR;
     }
 
-    res = sdcard_write_disk((uint8_t *)buff, sector, count);
+    switch (pdrv) {
+        case DEV_SDCARD:
+            res = sdcard_write_disk((uint8_t *)buff, sector, count);
+            break;
 
-    if (res == SD_OPERATE_OK) {
+        case DEV_NAND:
+            res = ftl_write_sectors((uint8_t *)buff, sector, 512, count);
+            break;
+
+        default:
+            res = 1;
+            break;
+    }
+
+    if (res == 0) {
         return RES_OK;
     } else {
         return RES_ERROR;
     }
 }
-
 #endif
 
 /*-----------------------------------------------------------------------*/
@@ -125,6 +161,36 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
 
             case GET_SECTOR_COUNT:
                 *(DWORD *)buff = g_sdcard_info.LogBlockNbr;
+                res = RES_OK;
+                break;
+
+            default:
+                res = RES_PARERR;
+                break;
+        }
+    } else if (DEV_NAND) {
+        switch (cmd) {
+            case CTRL_SYNC:
+                res = RES_OK;
+                break;
+
+            case GET_SECTOR_SIZE:
+                /* NAND FLASH 扇区强制为 512 字节大小 */
+                *(WORD *)buff = 512;
+                res = RES_OK;
+                break;
+
+            case GET_BLOCK_SIZE:
+                /* block 大小, 定义成一个page的大小 */
+                *(WORD *)buff = nand_dev.page_mainsize / 512;
+                res = RES_OK;
+                break;
+
+            case GET_SECTOR_COUNT:
+                /* NAND FLASH 的总扇区大小 */
+                *(DWORD *)buff = nand_dev.valid_blocknum *
+                                 nand_dev.block_pagenum *
+                                 nand_dev.page_mainsize / 512;
                 res = RES_OK;
                 break;
 

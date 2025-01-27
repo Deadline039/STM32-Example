@@ -30,10 +30,10 @@ uint8_t system_clock_config(void) {
     rcc_osc_init.HSEState = RCC_HSE_ON;
     rcc_osc_init.PLL.PLLState = RCC_PLL_ON;
     rcc_osc_init.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    rcc_osc_init.PLL.PLLN = 360;
+    rcc_osc_init.PLL.PLLN = 336;
     rcc_osc_init.PLL.PLLM = 25;
     rcc_osc_init.PLL.PLLP = RCC_PLLP_DIV2;
-    rcc_osc_init.PLL.PLLQ = 8;
+    rcc_osc_init.PLL.PLLQ = 7;
     if (HAL_RCC_OscConfig(&rcc_osc_init) != HAL_OK) {
         return SYSTEM_CORE_HSC_FAIL;
     }

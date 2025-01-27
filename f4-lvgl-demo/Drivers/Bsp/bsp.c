@@ -15,7 +15,7 @@
 void bsp_init(void) {
     HAL_Init();
     system_clock_config();
-    delay_init(180);
+    delay_init(168);
     usart1_init(115200);
     i2c2_init(250000, 0x00, I2C_ADDRESSINGMODE_7BIT);
     spi5_init(SPI_MODE_MASTER, SPI_CLK_MODE3, SPI_DATASIZE_8BIT,

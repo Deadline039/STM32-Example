@@ -211,8 +211,7 @@
                   },
                   "icon": "svg:page"
                 }
-              ],
-              "active": true
+              ]
             },
             {
               "type": "row",
@@ -247,7 +246,8 @@
                       "enableClose": false,
                       "icon": "svg:components"
                     }
-                  ]
+                  ],
+                  "active": true
                 }
               ]
             }
@@ -988,7 +988,11 @@
   "objects": {
     "[lvgl-app.eez-project]:/userPages/0[flow-state]": {
       "selection": {
-        "0": {}
+        "0": {
+          "7": {
+            "$selected": true
+          }
+        }
       },
       "transform": {
         "translate": {

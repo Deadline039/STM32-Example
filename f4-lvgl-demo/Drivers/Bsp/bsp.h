@@ -23,6 +23,9 @@ extern "C" {
 #include "./led/led.h"
 #include "./sdram/sdram.h"
 #include "./touch/touch.h"
+#include "./sd_card/sdio_sdcard.h"
+#include "./w25qxx/w25qxx.h"
+#include "./nand/nand.h"
 
 void bsp_init(void);
 

@@ -42,6 +42,18 @@
           },
           {
             "path": "Drivers/Bsp/touch/touch.c"
+          },
+          {
+            "path": "Drivers/Bsp/sd_card/sdio_sdcard.c"
+          },
+          {
+            "path": "Drivers/Bsp/w25qxx/w25qxx.c"
+          },
+          {
+            "path": "Drivers/Bsp/nand/ftl.c"
+          },
+          {
+            "path": "Drivers/Bsp/nand/nand.c"
           }
         ],
         "folders": []
@@ -57,6 +69,12 @@
           },
           {
             "path": "User/Application/Src/rtos_tasks.c"
+          },
+          {
+            "path": "User/Application/Src/devices.c"
+          },
+          {
+            "path": "User/Application/Src/usb_app.c"
           }
         ],
         "folders": []
@@ -175,6 +193,27 @@
               },
               {
                 "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_dma2d.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_sd.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_spi.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_nand.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_hal_pcd.c"
+              },
+              {
+                "path": "Drivers/STM32_HAL_Driver/Src/stm32f4xx_ll_usb.c"
               }
             ],
             "folders": []
@@ -799,6 +838,15 @@
                       }
                     ],
                     "folders": []
+                  },
+                  {
+                    "name": "fsdrv",
+                    "files": [
+                      {
+                        "path": "Middlewares/LVGL/GUI/lvgl/src/extra/libs/fsdrv/lv_fs_fatfs.c"
+                      }
+                    ],
+                    "folders": []
                   }
                 ]
               },
@@ -828,6 +876,99 @@
                   },
                   {
                     "path": "Middlewares/LVGL/APP/ui.c"
+                  }
+                ],
+                "folders": []
+              }
+            ]
+          },
+          {
+            "name": "FATFS",
+            "files": [
+              {
+                "path": "Middlewares/FATFS/diskio.c"
+              },
+              {
+                "path": "Middlewares/FATFS/ff.c"
+              },
+              {
+                "path": "Middlewares/FATFS/ffsystem.c"
+              },
+              {
+                "path": "Middlewares/FATFS/ffunicode.c"
+              }
+            ],
+            "folders": []
+          },
+          {
+            "name": "USB",
+            "files": [],
+            "folders": [
+              {
+                "name": "Class",
+                "files": [],
+                "folders": [
+                  {
+                    "name": "MSC",
+                    "files": [
+                      {
+                        "path": "Middlewares/USB/STM32_USB_Device_Library/Class/MSC/Src/usbd_msc_bot.c"
+                      },
+                      {
+                        "path": "Middlewares/USB/STM32_USB_Device_Library/Class/MSC/Src/usbd_msc_data.c"
+                      },
+                      {
+                        "path": "Middlewares/USB/STM32_USB_Device_Library/Class/MSC/Src/usbd_msc_scsi.c"
+                      },
+                      {
+                        "path": "Middlewares/USB/STM32_USB_Device_Library/Class/MSC/Src/usbd_msc.c"
+                      }
+                    ],
+                    "folders": []
+                  },
+                  {
+                    "name": "CDC",
+                    "files": [
+                      {
+                        "path": "Middlewares/USB/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c"
+                      }
+                    ],
+                    "folders": []
+                  }
+                ]
+              },
+              {
+                "name": "Core",
+                "files": [
+                  {
+                    "path": "Middlewares/USB/STM32_USB_Device_Library/Core/Src/usbd_core.c"
+                  },
+                  {
+                    "path": "Middlewares/USB/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c"
+                  },
+                  {
+                    "path": "Middlewares/USB/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c"
+                  }
+                ],
+                "folders": []
+              },
+              {
+                "name": "APP",
+                "files": [
+                  {
+                    "path": "Middlewares/USB/USB_APP/usbd_conf.c"
+                  },
+                  {
+                    "path": "Middlewares/USB/USB_APP/usbd_desc.c"
+                  },
+                  {
+                    "path": "Middlewares/USB/USB_APP/usbd_storage_if.c"
+                  },
+                  {
+                    "path": "Middlewares/USB/USB_APP/usbd_cdc_if.c"
+                  },
+                  {
+                    "path": "Middlewares/USB/USB_APP/usbd_composite.c"
                   }
                 ],
                 "folders": []
@@ -863,8 +1004,6 @@
       "excludeList": [
         "<virtual_root>/Drivers/CSP/CAN_STM32F4xx.c",
         "<virtual_root>/Drivers/CSP/ETH_STM32F4xx.c",
-        "<virtual_root>/Drivers/CSP/RTC_STM32F4xx.c",
-        "<virtual_root>/Drivers/CSP/SPI_STM32F4xx.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_adc.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_can.c",
@@ -877,8 +1016,6 @@
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_exti.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_i2s_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_iwdg.c",
-        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_rtc_ex.c",
-        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_rtc.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_usart.c",
@@ -940,7 +1077,30 @@
         "speed": 15000,
         "otherCmds": ""
       },
-      "uploadConfigMap": {},
+      "uploadConfigMap": {
+        "JLink": {
+          "bin": "",
+          "baseAddr": "",
+          "cpuInfo": {
+            "vendor": "ST",
+            "cpuName": "STM32F429IG"
+          },
+          "proType": 1,
+          "speed": 15000,
+          "otherCmds": ""
+        },
+        "STLink": {
+          "bin": "",
+          "proType": "SWD",
+          "resetMode": "default",
+          "runAfterProgram": true,
+          "speed": 4000,
+          "address": "0x08000000",
+          "elFile": "None",
+          "optionBytes": ".eide/debug.st.option.bytes.ini",
+          "otherCmds": ""
+        }
+      },
       "custom_dep": {
         "name": "default",
         "incList": [
@@ -957,13 +1117,20 @@
           "Middlewares/LVGL/GUI/lvgl",
           "Middlewares/LVGL/GUI/lvgl/src",
           "Middlewares/LVGL/GUI/porting",
-          "Middlewares/LVGL/APP"
+          "Middlewares/LVGL/APP",
+          "Middlewares/FATFS",
+          "Middlewares/USB/USB_APP",
+          "Middlewares/USB/STM32_USB_Device_Library/Class/MSC/Inc",
+          "Middlewares/USB/STM32_USB_Device_Library/Core/Inc",
+          "Middlewares/USB/STM32_USB_Device_Library/Class/CDC/Inc"
         ],
         "libList": [],
         "defineList": [
           "USE_HAL_DRIVER",
           "DEBUG",
-          "STM32F429xx"
+          "STM32F429xx",
+          "USE_USB_FS",
+          "USE_USBD_COMPOSITE"
         ]
       },
       "builderOptions": {

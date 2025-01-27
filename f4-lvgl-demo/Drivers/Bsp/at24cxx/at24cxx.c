@@ -1,153 +1,226 @@
 /**
  * @file    at24cxx.c
  * @author  Deadline039
- * @brief   AT24CXX系列芯片驱动
- * @version 1.0
+ * @brief   AT24Cxx 系列芯片驱动
+ * @version 1.1
  * @date    2024-09-03
+ *****************************************************************************
+ * A0 A1 A2 引脚电平, 用于定义地址.
+ *      芯片型号                    器件地址格式 (8bit)
+ *  AT24C01/02/32/64        1  0  1  0  A2  A1  A0  R/W
+ *      24C04,              1  0  1  0  A2  A1  a8  R/W
+ *      24C08,              1  0  1  0  A2  a9  a8  R/W
+ *      24C16,              1  0  1  0  a10 a9  a8  R/W
+ *    R/W      : 读 / 写控制位 0, 表示写；1, 表示读；
+ *    A0/A1/A2 : 对应器件的 1,2,3 引脚, 如果芯片对应的引脚位置为数据地址, 则无用
+ *    a8/a9/a10: 对应存储整列的高位地址,
+ * 11bit 地址最多可以表示 2048 个位置, 可以寻址 24C16 及以内的型号
+ * 对于 AT24C128/256, A2 必须为 0
+ *****************************************************************************
+ * Change Logs:
+ * Date         Version     Author      Notes
+ * 2024-09-03   1.0         Deadline039 第一次发布
+ * 2025-01-26   1.1         Deadline039 支持多设备
  */
 
 #include "at24cxx.h"
 
-static I2C_HandleTypeDef *at24cxx_hi2c;
+#include <string.h>
 
 /**
- * @brief I2C 读取一字节
+ * @brief AT24CXX I2C 读取一字节
  *
- * @param dev_address 设备地址
- * @param data_address 数据地址
+ * @param at24cxx 句柄
+ * @param addr 地址
  * @return 读到的字节
  */
-uint8_t i2c_read_byte(uint16_t dev_address, uint16_t data_address) {
-    uint8_t data;
-    HAL_I2C_Mem_Read(at24cxx_hi2c, dev_address, data_address,
-                     I2C_MEMADD_SIZE_8BIT, &data, 1, 0xF);
-    return data;
+static uint8_t at24cxx_i2c_read_byte(at24cxx_handle_t *at24cxx, uint16_t addr) {
+    uint16_t dev_address;
+    uint16_t mem_address;
+    uint16_t address_size;
+    uint8_t byte;
+
+    if (at24cxx->model > (uint16_t)AT24C16) {
+        dev_address = at24cxx->address + ((addr / 65536) << 1);
+        mem_address = addr % 65536;
+        address_size = I2C_MEMADD_SIZE_16BIT;
+    } else {
+        dev_address = at24cxx->address + ((addr / 256) << 1);
+        mem_address = addr % 256;
+        address_size = I2C_MEMADD_SIZE_8BIT;
+    }
+
+    HAL_I2C_Mem_Read(at24cxx->hi2c, dev_address, mem_address, address_size,
+                     &byte, 1, 1000);
+
+    return byte;
 }
 
 /**
- * @brief I2C 写入一字节
+ * @brief AT24CXX I2C 写入一字节
  *
- * @param dev_address 设备地址
- * @param data_address 数据地址
- * @param data 写入的数据
+ * @param at24cxx 句柄
+ * @param addr 地址
+ * @param byte 要写入的字节
+ * @return 操作状态
  */
-void i2c_write_byte(uint16_t dev_address, uint16_t data_address, uint8_t data) {
-    HAL_I2C_Mem_Write(at24cxx_hi2c, dev_address, data_address,
-                      I2C_MEMADD_SIZE_8BIT, &data, 1, 0xF);
+static at24cxx_result_t at24cxx_i2c_write_byte(at24cxx_handle_t *at24cxx,
+                                               uint16_t addr,
+                                               const uint8_t byte) {
+    uint16_t dev_address;
+    uint16_t mem_address;
+    uint16_t address_size;
 
-    /* Check if the Devices is ready for a new operation */
-    while (HAL_I2C_IsDeviceReady(at24cxx_hi2c, dev_address, 0xF, 0xF) != HAL_OK)
-        ;
+    if (at24cxx->model > (uint16_t)AT24C16) {
+        dev_address = at24cxx->address + ((addr / 65536) << 1);
+        mem_address = addr % 65536;
+        address_size = I2C_MEMADD_SIZE_16BIT;
+    } else {
+        dev_address = at24cxx->address + ((addr / 256) << 1);
+        mem_address = addr % 256;
+        address_size = I2C_MEMADD_SIZE_8BIT;
+    }
+
+    if (HAL_I2C_Mem_Write(at24cxx->hi2c, dev_address, mem_address, address_size,
+                          (uint8_t *)&byte, 1, 1000) != HAL_OK) {
+        return AT24CXX_ERROR;
+    }
 
     /* Wait for the end of the transfer */
-    while (HAL_I2C_GetState(at24cxx_hi2c) != HAL_I2C_STATE_READY)
+    while (HAL_I2C_GetState(at24cxx->hi2c) != HAL_I2C_STATE_READY)
         ;
+    /* Check if the Devices is ready for a new operation */
+    while (HAL_I2C_IsDeviceReady(at24cxx->hi2c, dev_address, 0xF, 0xF) !=
+           HAL_OK)
+        ;
+
+    return AT24CXX_OK;
 }
 
 /**
- * @brief 初始化 AT24Cxx 芯片
+ * @brief 初始化 AT24CXX 芯片
  *
+ * @param at24cxx 句柄
  * @param hi2c I2C 句柄
- * @return 芯片是否正常工作
+ * @param model 型号
+ * @param address 器件引脚模式
+ * @return 初始化状态
  */
-bool at24cxx_init(I2C_HandleTypeDef *hi2c) {
-    at24cxx_hi2c = hi2c;
-    return at24cxx_check();
+at24cxx_result_t at24cxx_init(at24cxx_handle_t *at24cxx,
+                              I2C_HandleTypeDef *hi2c, at24cxx_model_t model,
+                              at24cxx_address_t address) {
+    if (at24cxx == NULL) {
+        return AT24CXX_ERROR;
+    }
+
+    if (hi2c == NULL) {
+        return AT24CXX_ERROR;
+    }
+
+    at24cxx->hi2c = hi2c;
+    at24cxx->model = model;
+    at24cxx->address = 0xA0;
+    at24cxx->address |= address << 1;
+
+    return AT24CXX_OK;
 }
 
 /**
- * @brief 检查AT24Cxx芯片
+ * @brief 反初始化 AT24CXX 芯片
  *
- * @return 是否正常工作
- *  @note 检测原理: 在器件的末地址写如0X55, 然后再读取. 如果读取值为0X55
- *        则表示检测正常. 否则, 则表示检测失败.
+ * @param at24cxx
+ * @return 操作状态
  */
-bool at24cxx_check(void) {
-    uint8_t temp = at24cxx_read_byte(AT24CXX_TYPE);
-    if (temp == 0x55) {
-        return true;
+at24cxx_result_t at24cxx_deinit(at24cxx_handle_t *at24cxx) {
+    if (at24cxx == NULL) {
+        return AT24CXX_ERROR;
     }
 
-    at24cxx_write_byte(AT24CXX_TYPE, 0x55);
-    temp = at24cxx_read_byte(AT24CXX_TYPE);
+    memset(at24cxx, 0, sizeof(at24cxx_handle_t));
 
-    if (temp == 0x55) {
-        return true;
-    }
-
-    return false;
+    return AT24CXX_OK;
 }
 
 /**
- * @brief 读取一字节数据
+ * @brief AT24CXX 读一个字节
  *
+ * @param at24cxx 句柄
  * @param address 地址
- * @return 数据
+ * @return 读到的字节
  */
-uint8_t at24cxx_read_byte(uint16_t address) {
-    if (AT24CXX_TYPE >= AT24C16) {
-        /**
-         * 小于 2 Kbyte 寻址是: 数据地址8bit + 设备地址3bit
-         * 地址组合思路:
-         *      先按照芯片容量, 决定A2, A1, A0是否需要, 需要置1,
-         *      与定义的设备地址按位与, 得到设备地址的值1
-         *      数据地址高8位与芯片容量按位与,
-         *      超出芯片容量的位置0, 得到设备地址的值2
-         *      再将两个值按位或, 即可得到芯片的设备地址
-         */
-        uint16_t dev_address = (AT24CXX_ADDRESS & (~(AT24CXX_TYPE >> 8) << 1)) |
-                               ((AT24CXX_TYPE & address) >> 8 << 1);
-        return i2c_read_byte(dev_address, (address & 0xFF));
+uint8_t at24cxx_read_byte(at24cxx_handle_t *at24cxx, uint16_t address) {
+    if (at24cxx == NULL) {
+        return 0;
     }
-    return i2c_read_byte(AT24CXX_ADDRESS, address & 0xFF);
+
+    return at24cxx_i2c_read_byte(at24cxx, address);
 }
 
 /**
- * @brief 写入一字节数据
+ * @brief AT24CXX 写一个字节
  *
- * @param address 数据地址
- * @param byte 数据内容
+ * @param at24cxx 句柄
+ * @param address 地址
+ * @param byte 要写入的字节
+ * @return 是否写入成功
  */
-void at24cxx_write_byte(uint16_t address, uint8_t byte) {
-    if (AT24CXX_TYPE >= AT24C16) {
-        /**
-         * 小于 2 Kbyte 寻址是: 数据地址8bit + 设备地址3bit
-         * 地址组合思路:
-         *      先按照芯片容量, 决定A2, A1, A0是否需要, 需要置1,
-         *      与定义的设备地址按位与, 得到设备地址的值1
-         *      数据地址高8位与芯片容量按位与,
-         *      超出芯片容量的位置0, 得到设备地址的值2
-         *      再将两个值按位或, 即可得到芯片的设备地址
-         */
-        uint16_t dev_address = (AT24CXX_ADDRESS & (~(AT24CXX_TYPE >> 8) << 1)) |
-                               ((AT24CXX_TYPE & address) >> 8 << 1);
-        i2c_write_byte(dev_address, (address & 0xFF), byte);
+at24cxx_result_t at24cxx_write_byte(at24cxx_handle_t *at24cxx, uint16_t address,
+                                    const uint8_t byte) {
+    if (at24cxx == NULL) {
+        return AT24CXX_ERROR;
     }
-    i2c_write_byte(AT24CXX_ADDRESS, address, byte);
+
+    return at24cxx_i2c_write_byte(at24cxx, address, byte);
 }
 
 /**
- * @brief 读取n字节数据
+ * @brief AT24CXX 读取数据
  *
- * @param address 数据起始地址
- * @param[out] data_buf 数据接收缓冲区
- * @param data_len 要读取的数据长度
+ * @param at24cxx 句柄
+ * @param address 地址
+ * @param[out] data_buf 数据缓冲区
+ * @param data_len 要读取的长度
+ * @return 是否读取成功
  */
-void at24cxx_read(uint16_t address, uint8_t *data_buf, uint16_t data_len) {
-    for (size_t i = 0; i < data_len; ++i) {
-        data_buf[i] = at24cxx_read_byte(address + i);
+at24cxx_result_t at24cxx_read(at24cxx_handle_t *at24cxx, uint16_t address,
+                              uint8_t *data_buf, uint16_t data_len) {
+    if (at24cxx == NULL) {
+        return AT24CXX_ERROR;
     }
+
+    if (data_buf == NULL) {
+        return AT24CXX_ERROR;
+    }
+
+    for (uint32_t i = 0; i < data_len; ++i) {
+        data_buf[i] = at24cxx_i2c_read_byte(at24cxx, address + i);
+    }
+
+    return AT24CXX_OK;
 }
 
 /**
- * @brief 写入n字节数据
+ * @brief AT24CXX 写入数据
  *
- * @param address 数据起始地址
- * @param data_buf 数据接收缓冲区
- * @param data_len 要读取的数据长度
+ * @param at24cxx 句柄
+ * @param address 地址
+ * @param data_buf 数据缓冲区
+ * @param data_len 要写入的长度
+ * @return 是否写入成功
  */
-void at24cxx_write(uint16_t address, uint8_t *data_buf, uint16_t data_len) {
-    for (size_t i = 0; i < data_len; ++i) {
-        at24cxx_write_byte(address + i, data_buf[i]);
+at24cxx_result_t at24cxx_write(at24cxx_handle_t *at24cxx, uint16_t address,
+                               const uint8_t *data_buf, uint16_t data_len) {
+    if (at24cxx == NULL) {
+        return AT24CXX_ERROR;
     }
+
+    if (data_buf == NULL) {
+        return AT24CXX_ERROR;
+    }
+
+    for (uint32_t i = 0; i < data_len; ++i) {
+        at24cxx_i2c_write_byte(at24cxx, address + i,
+                               (const uint8_t)(data_buf[i]));
+    }
+    return AT24CXX_OK;
 }

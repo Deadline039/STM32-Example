@@ -13,6 +13,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/*****************************************************************************
+ * @defgroup Include files.
+ * @{
+ */
+
 #include "bsp.h"
 
 #include "FreeRTOS.h"
@@ -24,7 +29,44 @@ extern "C" {
 
 #include "ui.h"
 
+#include "usbd_cdc.h"
+#include "usbd_cdc_if.h"
+#include "usbd_composite.h"
+#include "usbd_conf.h"
+#include "usbd_core.h"
+#include "usbd_desc.h"
+#include "usbd_msc.h"
+#include "usbd_storage_if.h"
+
+/**
+ * @}
+ */
+
+/*****************************************************************************
+ * @defgroup Public variables.
+ * @{
+ */
+
+extern at24cxx_handle_t at24c02_handle;
+
+extern TaskHandle_t usb_app_handle;
+
+/**
+ * @}
+ */
+
+/*****************************************************************************
+ * @defgroup Public functions.
+ * @{
+ */
+
 void freertos_start(void);
+void at24c02_dev_init(void);
+
+void usb_app(void *pvParameters);
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }

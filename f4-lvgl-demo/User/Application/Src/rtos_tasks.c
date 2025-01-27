@@ -14,12 +14,6 @@ void start_task(void *pvParameters);
 static TaskHandle_t task1_handle;
 void task1(void *pvParameters);
 
-static TaskHandle_t task2_handle;
-void task2(void *pvParameters);
-
-static TaskHandle_t task3_handle;
-void task3(void *pvParameters);
-
 /*****************************************************************************/
 
 /**
@@ -40,15 +34,11 @@ void start_task(void *pvParameters) {
     UNUSED(pvParameters);
 
     at24c02_dev_init();
-    lv_init();
-    lv_port_disp_init();
-    lv_port_indev_init();
 
     taskENTER_CRITICAL();
 
-    xTaskCreate(task1, "task1", 512, NULL, 2, &task1_handle);
-    // xTaskCreate(task2, "task2", 512, NULL, 2, &task2_handle);
-    // xTaskCreate(task3, "task3", 512, NULL, 2, &task3_handle);
+    // xTaskCreate(task1, "task1", 512, NULL, 2, &task1_handle);
+    xTaskCreate(usb_app, "usb_app", 512, NULL, 2, &usb_app_handle);
 
     vTaskDelete(start_task_handle);
     taskEXIT_CRITICAL();
@@ -65,12 +55,15 @@ void action_toggle_led1(lv_event_t *e) {
 }
 
 /**
-//  * @brief Task1: Blink.
+ * @brief Task1: Blink.
  *
  * @param pvParameters Start parameters.
  */
 void task1(void *pvParameters) {
     UNUSED(pvParameters);
+    lv_init();
+    lv_port_disp_init();
+    lv_port_indev_init();
 
     ui_init();
 
@@ -79,26 +72,4 @@ void task1(void *pvParameters) {
         ui_tick();
         vTaskDelay(5);
     }
-}
-
-/**
- * @brief Task2: print running time.
- *
- * @param pvParameters Start parameters.
- */
-void task2(void *pvParameters) {
-    UNUSED(pvParameters);
-    while (1)
-        ;
-}
-
-/**
- * @brief Task3: Scan the key and print which key pressed.
- *
- * @param pvParameters Start parameters.
- */
-void task3(void *pvParameters) {
-    UNUSED(pvParameters);
-    while (1)
-        ;
 }

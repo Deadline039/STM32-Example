@@ -8,7 +8,7 @@
 
 #include "includes.h"
 
-static USBD_HandleTypeDef usbd_device;
+USBD_HandleTypeDef usbd_device;
 TaskHandle_t usb_app_handle;
 
 /**
@@ -17,13 +17,21 @@ TaskHandle_t usb_app_handle;
  */
 void usb_app(void *pvParameters) {
     UNUSED(pvParameters);
+    int a;
+    float b;
 
-    USBD_Init(&usbd_device, &MSC_Desc, DEVICE_FS); /* 初始化USB */
-    USBD_RegisterClass(&usbd_device, &USBD_MSC);   /* 添加类 */
-    USBD_MSC_RegisterStorage(&usbd_device,
-                             &USBD_DISK_fops); /* 为MSC类添加回调函数 */
-    USBD_Start(&usbd_device);                  /* 开启USB */
+    USBD_Init(&usbd_device, &VCP_Desc, DEVICE_FS);    /* 初始化USB */
+    USBD_RegisterClass(&usbd_device, USBD_CDC_CLASS); /* 添加类 */
+    USBD_CDC_RegisterInterface(&usbd_device,
+                               &USBD_CDC_fops); /* 为MSC类添加回调函数 */
+    USBD_Start(&usbd_device);                   /* 开启USB */
 
-    while (1)
-        ;
+    while (1) {
+        if (g_usb_device_state == 1) {
+            usb_cdc_scanf("%d %f", &a, &b);
+
+            usb_cdc_printf("a = %d, b = %f", a, b);
+            LED1(0); /* 绿灯亮 */
+        }
+    }
 }

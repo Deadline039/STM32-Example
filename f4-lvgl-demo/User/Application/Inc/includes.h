@@ -29,6 +29,8 @@ extern "C" {
 
 #include "ui.h"
 
+#include "usbd_cdc.h"
+#include "usbd_cdc_interface.h"
 #include "usbd_conf.h"
 #include "usbd_core.h"
 #include "usbd_desc.h"

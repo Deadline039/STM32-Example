@@ -8,6 +8,8 @@
 
 #include "includes.h"
 
+extern USBD_HandleTypeDef usbd_device;
+
 /**
  * @brief The program entrance.
  *

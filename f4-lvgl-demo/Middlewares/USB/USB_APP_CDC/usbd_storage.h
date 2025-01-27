@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    USB_Device/MSC_Standalone/Inc/usbd_storage.h
+  * @file    USB_Device/MSC_Standalone/Inc/usbd_storage_if.h
   * @author  MCD Application Team
   * @brief   Header for usbd_storage.c module
   ******************************************************************************

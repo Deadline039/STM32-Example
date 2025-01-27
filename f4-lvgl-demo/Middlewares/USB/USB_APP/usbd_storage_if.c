@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------
  */
 
-#include "usbd_storage.h"
+#include "usbd_storage_if.h"
 
 #include <bsp.h>
 
@@ -165,6 +165,7 @@ int8_t STORAGE_GetCapacity(uint8_t lun, uint32_t *block_num,
  * @retval Status
  */
 int8_t STORAGE_IsReady(uint8_t lun) {
+    UNUSED(lun);
     g_usb_state_reg |= 0X10;
     return USBD_OK;
 }
@@ -175,6 +176,7 @@ int8_t STORAGE_IsReady(uint8_t lun) {
  * @retval Status (0: write enabled / -1: otherwise)
  */
 int8_t STORAGE_IsWriteProtected(uint8_t lun) {
+    UNUSED(lun);
     return USBD_OK;
 }
 

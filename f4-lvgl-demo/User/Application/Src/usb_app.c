@@ -20,18 +20,17 @@ void usb_app(void *pvParameters) {
     int a;
     float b;
 
-    USBD_Init(&usbd_device, &VCP_Desc, DEVICE_FS);    /* 初始化USB */
-    USBD_RegisterClass(&usbd_device, USBD_CDC_CLASS); /* 添加类 */
-    USBD_CDC_RegisterInterface(&usbd_device,
-                               &USBD_CDC_fops); /* 为MSC类添加回调函数 */
-    USBD_Start(&usbd_device);                   /* 开启USB */
+    sdcard_init();
+
+    USBD_Init(&usbd_device, &FS_Desc, DEVICE_FS);
+
+    USBD_RegisterClass(&usbd_device, &USBD_MC);
+    USBD_Start(&usbd_device);
 
     while (1) {
         if (g_usb_device_state == 1) {
             usb_cdc_scanf("%d %f", &a, &b);
-
             usb_cdc_printf("a = %d, b = %f", a, b);
-            LED1(0); /* 绿灯亮 */
         }
     }
 }

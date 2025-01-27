@@ -38,7 +38,7 @@ void start_task(void *pvParameters) {
     taskENTER_CRITICAL();
 
     // xTaskCreate(task1, "task1", 512, NULL, 2, &task1_handle);
-    xTaskCreate(usb_app, "usb_app", 512, NULL, 2, &usb_app_handle);
+    xTaskCreate(usb_app, "usb_app", 1024, NULL, 2, &usb_app_handle);
 
     vTaskDelete(start_task_handle);
     taskEXIT_CRITICAL();

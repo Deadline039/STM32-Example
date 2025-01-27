@@ -22,7 +22,7 @@
 EndBSPDependencies */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_cdc_interface.h"
+#include "usbd_cdc_if.h"
 
 #include <stdarg.h>
 #include <stdio.h>

@@ -30,12 +30,14 @@ extern "C" {
 #include "ui.h"
 
 #include "usbd_cdc.h"
-#include "usbd_cdc_interface.h"
+#include "usbd_cdc_if.h"
+#include "usbd_composite.h"
 #include "usbd_conf.h"
 #include "usbd_core.h"
 #include "usbd_desc.h"
 #include "usbd_msc.h"
-#include "usbd_storage.h"
+#include "usbd_storage_if.h"
+
 /**
  * @}
  */

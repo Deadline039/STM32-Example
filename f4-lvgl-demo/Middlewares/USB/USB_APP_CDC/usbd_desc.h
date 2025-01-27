@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    USB_Device/MSC_Standalone/Inc/usbd_desc.h
+  * @file    USB_Device/CDC_Standalone/Inc/usbd_desc.h
   * @author  MCD Application Team
   * @brief   Header for usbd_desc.c module
   ******************************************************************************
@@ -31,6 +31,6 @@
 #define  USB_SIZ_STRING_SERIAL       0x1A
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-extern USBD_DescriptorsTypeDef MSC_Desc;
+extern USBD_DescriptorsTypeDef VCP_Desc;
 
 #endif /* __USBD_DESC_H */

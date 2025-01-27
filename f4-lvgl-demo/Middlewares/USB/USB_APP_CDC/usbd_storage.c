@@ -19,7 +19,7 @@
 /* Includes ------------------------------------------------------------------
  */
 
-#include "usbd_storage.h"
+#include "usbd_storage_if.h"
 
 #include <bsp.h>
 

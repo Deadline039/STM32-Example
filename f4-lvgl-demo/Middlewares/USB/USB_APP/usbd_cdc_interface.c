@@ -186,6 +186,8 @@ static int8_t USB_CDC_Control(uint8_t cmd, uint8_t *pbuf, uint16_t length) {
     return (0);
 }
 
+static uint8_t *rx_buf;
+
 /**
  * @brief  USB_CDC_Receive
  *         Data received over USB OUT endpoint are sent over CDC interface
@@ -204,16 +206,15 @@ static int8_t USB_CDC_Control(uint8_t cmd, uint8_t *pbuf, uint16_t length) {
  *         USBD_FAIL
  */
 static int8_t USB_CDC_Receive(uint8_t *Buf, uint32_t *Len) {
-    UNUSED(Buf);
     UNUSED(Len);
+
+    rx_buf = Buf;
 
     USBD_CDC_ReceivePacket(&usbd_device);
     usb_cdc_rx_sta = 1;
 
     return (0);
 }
-
-static uint8_t *rx_buf;
 
 /**
  * @brief  USB_CDC_TransmitCplt
@@ -229,10 +230,9 @@ static uint8_t *rx_buf;
  *         USBD_FAIL
  */
 static int8_t USB_CDC_TransmitCplt(uint8_t *Buf, uint32_t *Len, uint8_t epnum) {
+    UNUSED(Buf);
     UNUSED(Len);
     UNUSED(epnum);
-
-    rx_buf = Buf;
 
     usb_cdc_tx_cplt = 1;
 
@@ -265,7 +265,7 @@ int usb_cdc_scanf(const char *__fmt, ...) {
         ;
 
     va_start(ap, __fmt);
-    res = vsscanf((const char *)rx_buf, __fmt, ap);
+    res = vsscanf((char *)rx_buf, __fmt, ap);
     va_end(ap);
 
     usb_cdc_rx_sta = 0;

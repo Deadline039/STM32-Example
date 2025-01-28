@@ -876,6 +876,24 @@
                   },
                   {
                     "path": "Middlewares/LVGL/APP/ui.c"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/APP/eez-flow-lz4.c"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/APP/eez-flow.cpp"
+                  },
+                  {
+                    "path": "Middlewares/LVGL/APP/eez_debug.cpp"
+                  }
+                ],
+                "folders": []
+              },
+              {
+                "name": "Font",
+                "files": [
+                  {
+                    "path": "Middlewares/LVGL/GUI_FONT/Font12.c"
                   }
                 ],
                 "folders": []
@@ -1019,7 +1037,8 @@
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_usart.c",
-        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_wwdg.c"
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_wwdg.c",
+        "<virtual_root>/Middlewares/LVGL/Font"
       ],
       "toolchain": "AC6",
       "compileConfig": {

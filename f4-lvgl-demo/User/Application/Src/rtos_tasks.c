@@ -11,8 +11,8 @@
 static TaskHandle_t start_task_handle;
 void start_task(void *pvParameters);
 
-static TaskHandle_t task1_handle;
-void task1(void *pvParameters);
+TaskHandle_t gui_task_handle;
+void gui_task(void *pvParameters);
 
 /*****************************************************************************/
 
@@ -37,19 +37,19 @@ void start_task(void *pvParameters) {
 
     taskENTER_CRITICAL();
 
-    // xTaskCreate(task1, "task1", 512, NULL, 2, &task1_handle);
-    xTaskCreate(usb_app, "usb_app", 1024, NULL, 2, &usb_app_handle);
+    // xTaskCreate(usb_app, "usb_app", 1024, NULL, 2, &usb_app_handle);
+    xTaskCreate(gui_task, "gui_task", 512, NULL, 2, &gui_task_handle);
 
     vTaskDelete(start_task_handle);
     taskEXIT_CRITICAL();
 }
 
-void action_toggle_led0(lv_event_t *e) {
+void action_led0_toggle(lv_event_t *e) {
     UNUSED(e);
     LED0_TOGGLE();
 }
 
-void action_toggle_led1(lv_event_t *e) {
+void action_led1_toggle(lv_event_t *e) {
     UNUSED(e);
     LED1_TOGGLE();
 }
@@ -59,7 +59,7 @@ void action_toggle_led1(lv_event_t *e) {
  *
  * @param pvParameters Start parameters.
  */
-void task1(void *pvParameters) {
+void gui_task(void *pvParameters) {
     UNUSED(pvParameters);
     lv_init();
     lv_port_disp_init();

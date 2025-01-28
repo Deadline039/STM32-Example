@@ -24,7 +24,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define NAND_DEBUG(...)   printf(__VA_ARGS__)
+#define NAND_DEBUG(...)                                                        \
+    do {                                                                       \
+        printf(__VA_ARGS__);                                                   \
+        printf("\n");                                                          \
+    } while (0)
 
 /*****************************************************************************
  * @defgroup RB 引脚定义

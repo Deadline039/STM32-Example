@@ -37,6 +37,7 @@ extern "C" {
 #include "usbd_desc.h"
 #include "usbd_msc.h"
 #include "usbd_storage_if.h"
+#include "ff.h"
 
 /**
  * @}
@@ -50,6 +51,7 @@ extern "C" {
 extern at24cxx_handle_t at24c02_handle;
 
 extern TaskHandle_t usb_app_handle;
+extern TaskHandle_t gui_task_handle;
 
 /**
  * @}

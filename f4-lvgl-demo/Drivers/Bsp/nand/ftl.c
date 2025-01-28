@@ -55,18 +55,18 @@ uint8_t ftl_init(void) {
     temp = ftl_create_lut(1);
 
     if (temp) {
-        NAND_DEBUG("Format nand flash...\r\n");
+        NAND_DEBUG("Format nand flash... ");
         temp = ftl_format(); /* 格式化 NAND */
 
         if (temp) {
-            NAND_DEBUG("Format failed!\r\n");
+            NAND_DEBUG("Format failed! ");
             return 2;
         }
     } else {
         /* 创建 LUT 表成功 */
-        NAND_DEBUG("Total block num: %d\r\n", nand_dev.block_totalnum);
-        NAND_DEBUG("Good block num: %d\r\n", nand_dev.good_blocknum);
-        NAND_DEBUG("Valid block num: %d\r\n", nand_dev.valid_blocknum);
+        NAND_DEBUG("Total block num: %d ", nand_dev.block_totalnum);
+        NAND_DEBUG("Good block num: %d ", nand_dev.good_blocknum);
+        NAND_DEBUG("Valid block num: %d ", nand_dev.valid_blocknum);
     }
 
     return 0;
@@ -539,7 +539,7 @@ uint8_t ftl_create_lut(uint8_t mode) {
             }
             nand_dev.good_blocknum++;
         } else {
-            NAND_DEBUG("bad block index: %u\r\n", i);
+            NAND_DEBUG("bad block index: %u ", i);
         }
     }
 
@@ -588,7 +588,7 @@ uint8_t ftl_blockcompare(uint32_t blockx, uint32_t cmpval) {
         res = nand_eraseblock(blockx);
 
         if (res) {
-            NAND_DEBUG("error erase block: %d\r\n", i);
+            NAND_DEBUG("error erase block: %d ", i);
         } else {
             if (cmpval != 0xFFFFFFFF) {
                 /* 不是判断全 1, 则需要重写数据 */
@@ -601,7 +601,7 @@ uint8_t ftl_blockcompare(uint32_t blockx, uint32_t cmpval) {
         }
     }
 
-    NAND_DEBUG("bad block checked: %u\r\n", blockx);
+    NAND_DEBUG("bad block checked: %u ", blockx);
 
     return 1;
 }
@@ -692,7 +692,7 @@ uint8_t ftl_format(void) {
 
             if (temp) {
                 /* 擦除失败, 认为坏块 */
-                NAND_DEBUG("Bad block: %u\r\n", i);
+                NAND_DEBUG("Bad block: %u ", i);
                 ftl_badblock_mark(i); /* 标记是坏块 */
             } else {
                 nand_dev.good_blocknum++; /* 好块数量加一 */
@@ -701,7 +701,7 @@ uint8_t ftl_format(void) {
     }
 #endif /* FLT_USE_BAD_BLOCK_SEARCH */
 
-    NAND_DEBUG("good_blocknum: %u\r\n", nand_dev.good_blocknum);
+    NAND_DEBUG("good_blocknum: %u ", nand_dev.good_blocknum);
 
     if (nand_dev.good_blocknum < 100) {
         return 1; /* 如果好块的数量少于 100, 则 NAND Flash 报废 */

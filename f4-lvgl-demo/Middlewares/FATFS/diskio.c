@@ -12,8 +12,8 @@
 #include "ff.h" /* Obtains integer types */
 
 /* Definitions of physical drive number for each drive */
-#define DEV_SDCARD 0 /* SD-Card to physical drive 0    */
-#define DEV_NAND   1 /* NAND flash to physical drive 1 */
+#define DEV_NAND   0 /* NAND flash to physical drive 0 */
+#define DEV_SDCARD 1 /* SD-Card to physical drive 1    */
 
 uint32_t NAND_FLASH_SECTOR_COUNT;
 uint8_t NAND_FLASH_BLOCK_SIZE;
@@ -35,20 +35,29 @@ DSTATUS disk_status(
 DSTATUS disk_initialize(
     BYTE pdrv /* Physical drive nmuber to identify the drive */
 ) {
-    uint8_t res;
+    uint8_t res = 0;
+    uint8_t times = 0;
 
-    switch (pdrv) {
-        case DEV_SDCARD:
-            res = sdcard_init();
-            break;
-
-        case DEV_NAND:
-            res = ftl_init();
-            break;
-
-        default:
+    while (times < 10) {
+        if (pdrv == DEV_NAND) {
+            if (ftl_init() == 0) {
+                break;
+            }
+        } else if (pdrv == DEV_SDCARD) {
+            if (sdcard_init() == SD_OPERATE_OK) {
+                break;
+            }
+        } else {
             res = 1;
             break;
+        }
+        ++times;
+    }
+
+    if (times >= 10) {
+        res = 1;
+    } else {
+        res = 0;
     }
 
     if (res) {
@@ -74,12 +83,12 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
     }
 
     switch (pdrv) {
-        case DEV_SDCARD:
-            res = sdcard_read_disk((uint8_t *)buff, sector, count);
-            break;
-
         case DEV_NAND:
             res = ftl_read_sectors(buff, sector, 512, count);
+            break;
+
+        case DEV_SDCARD:
+            res = sdcard_read_disk((uint8_t *)buff, sector, count);
             break;
 
         default:
@@ -87,7 +96,7 @@ DRESULT disk_read(BYTE pdrv,  /* Physical drive nmuber to identify the drive */
             break;
     }
 
-    if (res) {
+    if (res == 0) {
         return RES_OK;
     } else {
         return RES_ERROR;
@@ -112,12 +121,12 @@ DRESULT disk_write(BYTE pdrv, /* Physical drive nmuber to identify the drive */
     }
 
     switch (pdrv) {
-        case DEV_SDCARD:
-            res = sdcard_write_disk((uint8_t *)buff, sector, count);
-            break;
-
         case DEV_NAND:
             res = ftl_write_sectors((uint8_t *)buff, sector, 512, count);
+            break;
+
+        case DEV_SDCARD:
+            res = sdcard_write_disk((uint8_t *)buff, sector, count);
             break;
 
         default:
@@ -168,7 +177,7 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
                 res = RES_PARERR;
                 break;
         }
-    } else if (DEV_NAND) {
+    } else if (pdrv == DEV_NAND) {
         switch (cmd) {
             case CTRL_SYNC:
                 res = RES_OK;

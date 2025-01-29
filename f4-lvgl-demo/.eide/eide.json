@@ -977,16 +977,13 @@
                     "path": "Middlewares/USB/USB_APP/usbd_conf.c"
                   },
                   {
-                    "path": "Middlewares/USB/USB_APP/usbd_desc.c"
-                  },
-                  {
                     "path": "Middlewares/USB/USB_APP/usbd_storage_if.c"
                   },
                   {
                     "path": "Middlewares/USB/USB_APP/usbd_cdc_if.c"
                   },
                   {
-                    "path": "Middlewares/USB/USB_APP/usbd_composite.c"
+                    "path": "Middlewares/USB/USB_APP/usbd_desc.c"
                   }
                 ],
                 "folders": []

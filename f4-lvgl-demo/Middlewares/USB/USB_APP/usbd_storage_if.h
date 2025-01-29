@@ -27,7 +27,7 @@
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-extern volatile uint8_t g_usb_state_reg;
+extern volatile uint8_t g_usb_msc_state;
 
 extern USBD_StorageTypeDef  USBD_DISK_fops;
 extern USBD_StorageTypeDef  USBD_Storage_Interface_fops_FS;

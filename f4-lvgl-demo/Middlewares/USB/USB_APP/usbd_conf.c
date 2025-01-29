@@ -30,7 +30,7 @@
  */
 PCD_HandleTypeDef pcd_usb_fs_handle;
 /* 是否连接 */
-volatile uint8_t g_usb_device_state;
+volatile uint8_t g_usb_dev_state;
 
 /* Private function prototypes -----------------------------------------------
  */
@@ -109,7 +109,7 @@ void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd) {
     USBD_LL_SetupStage(hpcd->pData, (uint8_t *)hpcd->Setup);
 }
 
-/**
+/*
  * @brief  SOF callback.
  * @param  hpcd: PCD handle
  * @param  epnum: Endpoint Number
@@ -172,7 +172,7 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd) {
  * @retval None
  */
 void HAL_PCD_SuspendCallback(PCD_HandleTypeDef *hpcd) {
-    g_usb_device_state = 0;
+    g_usb_dev_state = 0;
     USBD_LL_Suspend(hpcd->pData);
     __HAL_PCD_GATE_PHYCLOCK(hpcd);
 
@@ -219,7 +219,7 @@ void HAL_PCD_ISOINIncompleteCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum) {
  * @retval None
  */
 void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd) {
-    g_usb_device_state = 1;
+    g_usb_dev_state = 1;
     USBD_LL_DevConnected(hpcd->pData);
 }
 
@@ -229,7 +229,7 @@ void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd) {
  * @retval None
  */
 void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd) {
-    g_usb_device_state = 0;
+    g_usb_dev_state = 0;
     USBD_LL_DevDisconnected(hpcd->pData);
 }
 
@@ -263,8 +263,7 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev) {
 
         HAL_PCDEx_SetRxFiFo(&pcd_usb_fs_handle, 0x80);
         HAL_PCDEx_SetTxFiFo(&pcd_usb_fs_handle, 0, 0x40);
-        HAL_PCDEx_SetTxFiFo(&pcd_usb_fs_handle, 1, 0x40);
-        HAL_PCDEx_SetTxFiFo(&pcd_usb_fs_handle, 3, 0x40);
+        HAL_PCDEx_SetTxFiFo(&pcd_usb_fs_handle, 1, 0x80);
     }
 
     return USBD_OK;
@@ -431,7 +430,7 @@ uint8_t USBD_LL_IsStallEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr) {
  */
 USBD_StatusTypeDef USBD_LL_SetUSBAddress(USBD_HandleTypeDef *pdev,
                                          uint8_t dev_addr) {
-    g_usb_device_state = 1;
+    g_usb_dev_state = 1;
     HAL_StatusTypeDef hal_status = HAL_OK;
     USBD_StatusTypeDef usb_status = USBD_OK;
 

@@ -30,7 +30,7 @@
  * bit3 : SD 卡读数据错误标志位
  * bit4 : 1, 表示电脑有轮询操作(表明连接还保持着)
  */
-volatile uint8_t g_usb_state_reg = 0;
+volatile uint8_t g_usb_msc_state = 0;
 
 /* Private typedef -----------------------------------------------------------
  */
@@ -166,7 +166,7 @@ int8_t STORAGE_GetCapacity(uint8_t lun, uint32_t *block_num,
  */
 int8_t STORAGE_IsReady(uint8_t lun) {
     UNUSED(lun);
-    g_usb_state_reg |= 0X10;
+    g_usb_msc_state |= 0X10;
     return USBD_OK;
 }
 
@@ -190,7 +190,7 @@ int8_t STORAGE_IsWriteProtected(uint8_t lun) {
 int8_t STORAGE_Read(uint8_t lun, uint8_t *buf, uint32_t blk_addr,
                     uint16_t blk_len) {
     int8_t ret = -1;
-    g_usb_state_reg |= 0X02;
+    g_usb_msc_state |= 0X02;
 
     switch (lun) {
         case STORAGE_DEV_NAND_FLASH:
@@ -206,7 +206,7 @@ int8_t STORAGE_Read(uint8_t lun, uint8_t *buf, uint32_t blk_addr,
     }
 
     if (ret) {
-        g_usb_state_reg |= 0X08;
+        g_usb_msc_state |= 0X08;
     }
 
     return ret;
@@ -223,7 +223,7 @@ int8_t STORAGE_Write(uint8_t lun, uint8_t *buf, uint32_t blk_addr,
                      uint16_t blk_len) {
     int8_t ret = -1;
 
-    g_usb_state_reg |= 0X01;
+    g_usb_msc_state |= 0X01;
 
     switch (lun) {
         case STORAGE_DEV_NAND_FLASH:
@@ -239,7 +239,7 @@ int8_t STORAGE_Write(uint8_t lun, uint8_t *buf, uint32_t blk_addr,
     }
 
     if (ret) {
-        g_usb_state_reg |= 0X04;
+        g_usb_msc_state |= 0X04;
     }
 
     return ret;

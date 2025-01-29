@@ -29,15 +29,14 @@ extern "C" {
 
 #include "ui.h"
 
+#include "ff.h"
 #include "usbd_cdc.h"
 #include "usbd_cdc_if.h"
-#include "usbd_composite.h"
 #include "usbd_conf.h"
 #include "usbd_core.h"
 #include "usbd_desc.h"
 #include "usbd_msc.h"
 #include "usbd_storage_if.h"
-#include "ff.h"
 
 /**
  * @}
@@ -65,6 +64,7 @@ extern TaskHandle_t gui_task_handle;
 void freertos_start(void);
 void at24c02_dev_init(void);
 
+uint8_t usb_detect_msc(void);
 void usb_app(void *pvParameters);
 /**
  * @}

@@ -17,7 +17,7 @@
 #include "../core/core_delay.h"
 
 /* NAND FLASH 句柄 */
-NAND_HandleTypeDef g_nand_handle;
+NAND_HandleTypeDef nand_handle;
 /* nand 重要参数结构体 */
 nand_dev_t nand_dev;
 
@@ -28,15 +28,15 @@ nand_dev_t nand_dev;
 uint8_t nand_init(void) {
     FMC_NAND_PCC_TimingTypeDef comspacetiming, attspacetiming;
 
-    g_nand_handle.Instance = FMC_NAND_DEVICE;
+    nand_handle.Instance = FMC_NAND_DEVICE;
     /* NAND 挂在 BANK3 上 */
-    g_nand_handle.Init.NandBank = FMC_NAND_BANK3;
-    g_nand_handle.Init.Waitfeature = FMC_NAND_PCC_WAIT_FEATURE_DISABLE;
-    g_nand_handle.Init.MemoryDataWidth = FMC_NAND_PCC_MEM_BUS_WIDTH_8;
-    g_nand_handle.Init.EccComputation = FMC_NAND_ECC_DISABLE;
-    g_nand_handle.Init.ECCPageSize = FMC_NAND_ECC_PAGE_SIZE_2048BYTE;
-    g_nand_handle.Init.TCLRSetupTime = 0;
-    g_nand_handle.Init.TARSetupTime = 1;
+    nand_handle.Init.NandBank = FMC_NAND_BANK3;
+    nand_handle.Init.Waitfeature = FMC_NAND_PCC_WAIT_FEATURE_DISABLE;
+    nand_handle.Init.MemoryDataWidth = FMC_NAND_PCC_MEM_BUS_WIDTH_8;
+    nand_handle.Init.EccComputation = FMC_NAND_ECC_DISABLE;
+    nand_handle.Init.ECCPageSize = FMC_NAND_ECC_PAGE_SIZE_2048BYTE;
+    nand_handle.Init.TCLRSetupTime = 0;
+    nand_handle.Init.TARSetupTime = 1;
 
     comspacetiming.SetupTime = 2;
     comspacetiming.WaitSetupTime = 3;
@@ -48,7 +48,7 @@ uint8_t nand_init(void) {
     attspacetiming.HoldSetupTime = 2;
     attspacetiming.HiZSetupTime = 1;
 
-    HAL_NAND_Init(&g_nand_handle, &comspacetiming, &attspacetiming);
+    HAL_NAND_Init(&nand_handle, &comspacetiming, &attspacetiming);
     nand_reset();
     delay_ms(100);
     nand_dev.id = nand_readid();

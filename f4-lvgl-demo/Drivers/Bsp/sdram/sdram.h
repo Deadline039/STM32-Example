@@ -20,7 +20,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-extern SDRAM_HandleTypeDef g_sdram_handle;
+extern SDRAM_HandleTypeDef sdram_handle;
 
 #define BANK5_SDRAM_ADDR                         ((uint32_t)(0XC0000000))
 

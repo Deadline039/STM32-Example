@@ -765,9 +765,6 @@
                         "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_style_gen.c"
                       },
                       {
-                        "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_templ.c"
-                      },
-                      {
                         "path": "Middlewares/LVGL/GUI/lvgl/src/misc/lv_timer.c"
                       },
                       {
@@ -817,9 +814,6 @@
                       },
                       {
                         "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_line.c"
-                      },
-                      {
-                        "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_objx_templ.c"
                       },
                       {
                         "path": "Middlewares/LVGL/GUI/lvgl/src/widgets/lv_roller.c"
@@ -885,15 +879,6 @@
                   },
                   {
                     "path": "Middlewares/LVGL/APP/eez_debug.cpp"
-                  }
-                ],
-                "folders": []
-              },
-              {
-                "name": "Font",
-                "files": [
-                  {
-                    "path": "Middlewares/LVGL/GUI_FONT/Font12.c"
                   }
                 ],
                 "folders": []
@@ -1034,8 +1019,7 @@
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim_ex.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_tim.c",
         "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_usart.c",
-        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_wwdg.c",
-        "<virtual_root>/Middlewares/LVGL/Font"
+        "<virtual_root>/Drivers/HAL_Driver/stm32f4xx_hal_wwdg.c"
       ],
       "toolchain": "AC6",
       "compileConfig": {

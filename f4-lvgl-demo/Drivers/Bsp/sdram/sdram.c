@@ -15,7 +15,7 @@
 
 #include "../core/core_delay.h"
 
-SDRAM_HandleTypeDef g_sdram_handle; /* SDRAM 句柄 */
+SDRAM_HandleTypeDef sdram_handle; /* SDRAM 句柄 */
 
 /**
  * @brief 初始化 SDRAM
@@ -24,27 +24,27 @@ SDRAM_HandleTypeDef g_sdram_handle; /* SDRAM 句柄 */
 void sdram_init(void) {
     FMC_SDRAM_TimingTypeDef sdram_timing;
 
-    g_sdram_handle.Instance = FMC_SDRAM_DEVICE;
-    g_sdram_handle.Init.SDBank = FMC_SDRAM_BANK1;
+    sdram_handle.Instance = FMC_SDRAM_DEVICE;
+    sdram_handle.Init.SDBank = FMC_SDRAM_BANK1;
     /* 列数量 */
-    g_sdram_handle.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_9;
+    sdram_handle.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_9;
     /* 行数量 */
-    g_sdram_handle.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_13;
+    sdram_handle.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_13;
     /* 数据宽度为 16 位 */
-    g_sdram_handle.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
+    sdram_handle.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
     /* 一共 4 个 BANK */
-    g_sdram_handle.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
+    sdram_handle.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
     /* CAS 为 3 */
-    g_sdram_handle.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_3;
+    sdram_handle.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_3;
     /* 失能写保护 */
-    g_sdram_handle.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
+    sdram_handle.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
 
     /* SDRAM 时钟 = HCLK / 2 */
-    g_sdram_handle.Init.SDClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
+    sdram_handle.Init.SDClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
     /* 使能突发 */
-    g_sdram_handle.Init.ReadBurst = FMC_SDRAM_RBURST_ENABLE;
+    sdram_handle.Init.ReadBurst = FMC_SDRAM_RBURST_ENABLE;
     /* 读通道延时 */
-    g_sdram_handle.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_1;
+    sdram_handle.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_1;
     /* 加载模式寄存器到激活时间的延迟为 2 个时钟周期 */
     sdram_timing.LoadToActiveDelay = 2;
     /* 退出自刷新延迟为 7 个时钟周期 */
@@ -59,7 +59,7 @@ void sdram_init(void) {
     sdram_timing.RPDelay = 2;
     /* 行到列延迟为 2 个时钟周期 */
     sdram_timing.RCDDelay = 2;
-    HAL_SDRAM_Init(&g_sdram_handle, &sdram_timing);
+    HAL_SDRAM_Init(&sdram_handle, &sdram_timing);
 
     /* 发送 SDRAM 初始化序列 */
     sdram_initialization_sequence();
@@ -70,7 +70,7 @@ void sdram_init(void) {
      * (Mhz)/ 行数 我们使用的 SDRAM 刷新周期为 64ms, SDCLK = 180 / 2 = 90 Mhz,
      * 行数为 8192 (2^13). 所以, COUNT = 64 * 1000 * 96 / 8192 - 20 = 705
      */
-    HAL_SDRAM_ProgramRefreshRate(&g_sdram_handle, 705);
+    HAL_SDRAM_ProgramRefreshRate(&sdram_handle, 705);
 }
 
 /**
@@ -83,9 +83,11 @@ void sdram_initialization_sequence(void) {
     /* SDRAM 控制器初始化完成以后还需要按照如下顺序初始化 SDRAM */
     sdram_send_cmd(0, FMC_SDRAM_CMD_CLK_ENABLE, 1, 0); /* 时钟配置使能 */
     delay_us(500);                                     /* 至少延时 500us */
-    sdram_send_cmd(0, FMC_SDRAM_CMD_PALL, 1, 0); /* 对所有存储区预充电 */
-    sdram_send_cmd(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8,
-                   0); /* 设置自刷新次数 */
+
+    /* 对所有存储区预充电 */
+    sdram_send_cmd(0, FMC_SDRAM_CMD_PALL, 1, 0);
+    /* 设置自刷新次数 */
+    sdram_send_cmd(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8, 0);
 
     /* 配置模式寄存器,SDRAM 的 bit0~bit2 为指定突发访问的长度,
      * bit3 为指定突发访问的类型,bit4~bit6 为 CAS 值,bit7 和 bit8 为运行模式
@@ -187,7 +189,7 @@ uint8_t sdram_send_cmd(uint8_t bankx, uint8_t cmd, uint8_t refresh,
     command.AutoRefreshNumber = refresh;     /* 自刷新次数 */
     command.ModeRegisterDefinition = regval; /* 要写入模式寄存器的值 */
 
-    if (HAL_SDRAM_SendCommand(&g_sdram_handle, &command, 0X1000) == HAL_OK) {
+    if (HAL_SDRAM_SendCommand(&sdram_handle, &command, 0X1000) == HAL_OK) {
         /* 向 SDRAM 发送命令 */
         return 0;
     } else {

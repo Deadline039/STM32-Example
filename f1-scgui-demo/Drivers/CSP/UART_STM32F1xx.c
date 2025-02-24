@@ -6,7 +6,7 @@
  * @date    2024-10-22
  */
 
-#include "CSP_Config.h"
+#include <CSP_Config.h>
 
 #include "UART_STM32F1xx.h"
 

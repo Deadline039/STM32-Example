@@ -109,7 +109,7 @@ uint8_t can_rate_calc(uint32_t baud_rate, uint32_t prop_delay,
                       uint32_t base_freq, uint32_t *prescale, uint32_t *tsjw,
                       uint32_t *tseg1, uint32_t *tseg2);
 
-CAN_HandleTypeDef *can_get_handle(can_selected_t can_select);
+CAN_HandleTypeDef *can_get_handle(can_selected_t can_selected);
 uint8_t can_send_message(can_selected_t can_selected, uint32_t can_ide,
                          uint32_t id, uint8_t len, const uint8_t *msg);
 uint8_t can_send_remote(can_selected_t can_selected, uint32_t can_ide,

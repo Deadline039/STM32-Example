@@ -7,7 +7,7 @@
  * @date    2024-08-30
  */
 
-#include "CSP_Config.h"
+#include <CSP_Config.h>
 
 #include "RTC_STM32F1xx.h"
 

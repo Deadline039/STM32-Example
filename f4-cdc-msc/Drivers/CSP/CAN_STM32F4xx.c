@@ -1,9 +1,12 @@
+
 /**
  * @file    CAN_STM32F4xx.c
  * @author  Deadline039
- * @brief   Chip Support Package of CAN on STM32F4xx
+ * @brief   Chip Support Package of FDCAN on STM32F4xx
  * @version 1.0
- * @date    2024-10-22
+ * @date    2025-02-02
+ * @note    We will support FDCAN in the feature.
+ *          Generate Automatically. 
  */
 
 #include <CSP_Config.h>
@@ -11,6 +14,7 @@
 #include "CAN_STM32F4xx.h"
 
 #include <math.h>
+
 
 /*****************************************************************************
  * @defgroup CAN1 Functions.
@@ -183,6 +187,8 @@ uint8_t can1_deinit(void) {
  * @}
  */
 
+
+
 /*****************************************************************************
  * @defgroup CAN2 Functions.
  * @{
@@ -216,7 +222,7 @@ CAN_HandleTypeDef can2_handle = {.Instance = CAN2,
  * @retval - 6: `CAN_INITED`:            This can is inited.
  */
 uint8_t can2_init(uint32_t baud_rate, uint32_t prop_delay) {
-    if (HAL_CAN_GetState(&can2_handle) != HAL_CAN_STATE_RESET) {
+    if (__HAL_RCC_CAN2_IS_CLK_ENABLED()) {
         return CAN_INITED;
     }
 
@@ -353,6 +359,8 @@ uint8_t can2_deinit(void) {
 /**
  * @}
  */
+
+
 
 /*****************************************************************************
  * @defgroup CAN3 Functions.
@@ -525,6 +533,8 @@ uint8_t can3_deinit(void) {
  * @}
  */
 
+
+
 /*****************************************************************************
  * @defgroup Public functions of CAN.
  * @{
@@ -544,16 +554,17 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef *hcan) {
                                          .Speed = GPIO_SPEED_FREQ_VERY_HIGH};
 #if CAN3_ENABLE
     if (hcan->Instance == CAN3) {
-        gpio_init_struct.Alternate = GPIO_AF11_CAN3;
-        __HAL_RCC_CAN3_CLK_ENABLE();
 
         CSP_GPIO_CLK_ENABLE(CAN3_TX_PORT);
         gpio_init_struct.Pin = CAN3_TX_PIN;
+        gpio_init_struct.Alternate = CAN3_TX_AF;
         HAL_GPIO_Init(CSP_GPIO_PORT(CAN3_TX_PORT), &gpio_init_struct);
 
         CSP_GPIO_CLK_ENABLE(CAN3_RX_PORT);
         gpio_init_struct.Pin = CAN3_RX_PIN;
+        gpio_init_struct.Alternate = CAN3_RX_AF;
         HAL_GPIO_Init(CSP_GPIO_PORT(CAN3_RX_PORT), &gpio_init_struct);
+        __HAL_RCC_CAN3_CLK_ENABLE();
 
 #if CAN3_ENABLE_TX_IT
         HAL_NVIC_SetPriority(CAN3_TX_IRQn, CAN3_TX_IT_PRIORITY, CAN3_TX_IT_SUB);
@@ -587,12 +598,12 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef *hcan) {
 
     CSP_GPIO_CLK_ENABLE(CAN1_TX_PORT);
     gpio_init_struct.Pin = CAN1_TX_PIN;
-    gpio_init_struct.Alternate = CAN1_TX_GPIO_AF;
+    gpio_init_struct.Alternate = CAN1_TX_AF;
     HAL_GPIO_Init(CSP_GPIO_PORT(CAN1_TX_PORT), &gpio_init_struct);
 
     CSP_GPIO_CLK_ENABLE(CAN1_RX_PORT);
     gpio_init_struct.Pin = CAN1_RX_PIN;
-    gpio_init_struct.Alternate = CAN1_RX_GPIO_AF;
+    gpio_init_struct.Alternate = CAN1_RX_AF;
     HAL_GPIO_Init(CSP_GPIO_PORT(CAN1_RX_PORT), &gpio_init_struct);
 
 #if CAN1_ENABLE_TX_IT
@@ -618,16 +629,17 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef *hcan) {
 #endif /* CAN1_ENABLE */
 
 #if CAN2_ENABLE
-    gpio_init_struct.Alternate = GPIO_AF9_CAN2;
     __HAL_RCC_CAN2_CLK_ENABLE();
 
     CSP_GPIO_CLK_ENABLE(CAN2_TX_PORT);
     gpio_init_struct.Pin = CAN2_TX_PIN;
+    gpio_init_struct.Alternate = CAN2_TX_AF;
 
     HAL_GPIO_Init(CSP_GPIO_PORT(CAN2_TX_PORT), &gpio_init_struct);
 
     CSP_GPIO_CLK_ENABLE(CAN2_RX_PORT);
     gpio_init_struct.Pin = CAN2_RX_PIN;
+    gpio_init_struct.Alternate = CAN2_RX_AF;
     HAL_GPIO_Init(CSP_GPIO_PORT(CAN2_RX_PORT), &gpio_init_struct);
 
 #if CAN2_ENABLE_TX_IT
@@ -659,6 +671,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef *hcan) {
  * @param hcan The handle of CAN
  */
 void HAL_CAN_MspDeInit(CAN_HandleTypeDef *hcan) {
+
 #if CAN1_ENABLE
     if (hcan->Instance == CAN1) {
         __HAL_RCC_CAN1_CLK_DISABLE();
@@ -733,22 +746,23 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef *hcan) {
 #endif /* CAN3_ENABLE_SCE_IT */
     }
 #endif /* CAN3_ENABLE */
+
 }
 
 /**
- * @brief Calcuate parameters of specific CAN baudrate.
+ * @brief Calcuate parameters of specific CAN Classic baudrate.
  *
  * @param[in] baud_rate CAN band rate. Unit: bps.
  * @param[in] prop_delay The propagation delay of bus, include cable and can
  *                       transceiver. Unit: ns.
- * @param[out] base_freq Base frequency of peripherals. Unit: Hz.
+ * @param[in] base_freq Base frequency of peripherals. Unit: Hz.
  * @param[out] prescale The prescale of `base_freq`.
  * @param[out] tsjw Syncronisation Jump Width
  * @param[out] tseg1 Time of segment 1.
  * @param[out] tseg2 Time of segment 2.
  * @return Calcuate status.
- * @retval 0: No error;
- * @retval 1: Can not satisfied this baudrate in this condition.
+ * @retval - 0: No error;
+ * @retval - 1: Can not satisfied this baudrate in this condition.
  */
 uint8_t can_rate_calc(uint32_t baud_rate, uint32_t prop_delay,
                       uint32_t base_freq, uint32_t *prescale, uint32_t *tsjw,
@@ -834,12 +848,12 @@ uint8_t can_rate_calc(uint32_t baud_rate, uint32_t prop_delay,
 }
 
 /**
- * @brief Get the CAN handle with specificd CAN.
+ * @brief Get the CAN handle with specified CAN.
  *
  * @param can_selected Specific which can will to get.
  * @return The handle of CAN. return NULL which the CAN doesn't exist.
  */
-CAN_HandleTypeDef *can_get_handle(can_selected_t can_select) {
+CAN_HandleTypeDef *can_get_handle(can_selected_t can_selected) {
     switch (can_selected) {
 
 #if CAN1_ENABLE
@@ -982,3 +996,4 @@ uint8_t can_send_remote(can_selected_t can_selected, uint32_t can_ide,
 /**
  * @}
  */
+

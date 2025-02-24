@@ -152,16 +152,14 @@ static void can_rx_callback_ext_10(void *node_obj, can_rx_header_t *rx_header,
 void task3(void *pvParameters) {
     UNUSED(pvParameters);
 
-    can_selected_t can_select = can1_selected;
-
-    can_list_add_new_node(can_select, NULL, 3, 0xFF, CAN_ID_STD,
+    can_list_add_new_node(can1_selected, NULL, 3, 0xFF, CAN_ID_STD,
                           can_rx_callback_std_3);
-    can_list_add_new_node(can_select, NULL, 10, 0xFF, CAN_ID_STD,
+    can_list_add_new_node(can1_selected, NULL, 10, 0xFF, CAN_ID_STD,
                           can_rx_callback_std_10);
 
-    can_list_add_new_node(can_select, NULL, 3, 0xFF, CAN_ID_EXT,
+    can_list_add_new_node(can2_selected, NULL, 3, 0xFF, CAN_ID_EXT,
                           can_rx_callback_ext_3);
-    can_list_add_new_node(can_select, NULL, 10, 0xFF, CAN_ID_EXT,
+    can_list_add_new_node(can3_selected, NULL, 10, 0xFF, CAN_ID_EXT,
                           can_rx_callback_ext_10);
 
     const uint8_t tx_data[8] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};

@@ -2668,22 +2668,22 @@
 #endif  /* FDCAN2_TX_ID */
 
 //   <e> Enable FDCAN2 IT0 Interrupt
-#define FDCAN2_IT0_IT_ENABLE 0
+#define FDCAN2_IT0_IT_ENABLE 1
 
 #if FDCAN2_IT0_IT_ENABLE
 
 //   <o> FDCAN2 IT0 Interrupt Priority <0-15>
 //   <i> The Interrupt Priority of FDCAN2 IT0
-#define FDCAN2_IT0_IT_PRIORITY        2
+#define FDCAN2_IT0_IT_PRIORITY        5
 //   <o> FDCAN2 IT0 Interrupt SubPriority <0-15>
 //   <i> The Interrupt SubPriority of FDCAN2 IT0
-#define FDCAN2_IT0_IT_SUB             3
+#define FDCAN2_IT0_IT_SUB             1
 
 //   </e>
 #endif /* FDCAN2_IT0_IT_ENABLE */
 
 //   <e> Enable FDCAN2 IT1 Interrupt
-#define FDCAN2_IT1_IT_ENABLE 1
+#define FDCAN2_IT1_IT_ENABLE 0
 
 #if FDCAN2_IT1_IT_ENABLE
 
@@ -2734,22 +2734,22 @@
 #endif  /* FDCAN3_TX_ID */
 
 //   <e> Enable FDCAN3 IT0 Interrupt
-#define FDCAN3_IT0_IT_ENABLE 0
+#define FDCAN3_IT0_IT_ENABLE 1
 
 #if FDCAN3_IT0_IT_ENABLE
 
 //   <o> FDCAN3 IT0 Interrupt Priority <0-15>
 //   <i> The Interrupt Priority of FDCAN3 IT0
-#define FDCAN3_IT0_IT_PRIORITY        2
+#define FDCAN3_IT0_IT_PRIORITY        5
 //   <o> FDCAN3 IT0 Interrupt SubPriority <0-15>
 //   <i> The Interrupt SubPriority of FDCAN3 IT0
-#define FDCAN3_IT0_IT_SUB             3
+#define FDCAN3_IT0_IT_SUB             2
 
 //   </e>
 #endif /* FDCAN3_IT0_IT_ENABLE */
 
 //   <e> Enable FDCAN3 IT1 Interrupt
-#define FDCAN3_IT1_IT_ENABLE 1
+#define FDCAN3_IT1_IT_ENABLE 0
 
 #if FDCAN3_IT1_IT_ENABLE
 
